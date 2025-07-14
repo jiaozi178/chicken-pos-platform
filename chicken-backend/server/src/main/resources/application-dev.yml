@@ -1,9 +1,9 @@
 hanye:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/hanye_take_out
+    url: jdbc:mysql://localhost:3306/chicken_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
     username: root
-    password: 20040111
+    password: 123456
   redis:
     host: localhost
     port: 6379
@@ -21,3 +21,39 @@ hanye:
     weChatPayCertFilePath: C:\software\wechatpay_166D96F876F45C7D07CE98952A96EC980368ACFC.pem
     notifyUrl: https://9ea0754.r19.cpolar.top/notify/paySuccess
     refundNotifyUrl: https://9ea0754.r19.cpolar.top/notify/refundSuccess
+
+# 添加 Spring Boot 配置
+spring:
+  sql:
+    init:
+      # 指定建表脚本位置
+      schema-locations: classpath:sql/schema.sql
+      # 只在表不存在时执行
+      mode: always
+      # 如果表已存在继续执行（但脚本需要是 create if not exists）
+      continue-on-error: true
+      # 字符编码
+      encoding: utf-8
+      # 脚本分隔符
+      separator: ;
+  datasource:
+    # 使用自定义数据源配置
+    driver-class-name: ${hanye.datasource.driver-class-name}
+    url: ${hanye.datasource.url}
+    username: ${hanye.datasource.username}
+    password: ${hanye.datasource.password}
+
+# MyBatis 配置
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    lazy-loading-enabled: true
+    cache-enabled: true
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: fun.cyhgraph.pojo.entity
+
+# 日志配置
+logging:
+  level:
+    fun.cyhgraph: debug
+    org.springframework.jdbc: debug
