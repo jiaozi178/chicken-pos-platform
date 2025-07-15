@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### from Chase ###
+server/src/main/resources/application-dev.yml
+
