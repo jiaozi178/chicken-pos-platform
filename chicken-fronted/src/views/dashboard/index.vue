@@ -172,7 +172,7 @@ li {
 
     li {
       flex: 1;
-      background: #eefaff;
+      background: #EEEEEE;
       border-radius: 4px;
       margin-left: 20px;
       padding: 20px;
@@ -206,7 +206,7 @@ li {
       }
 
       .green {
-        color: #00B36A;
+        color: #FFF000;
       }
     }
   }
@@ -221,7 +221,7 @@ li {
 
     li {
       flex: 1;
-      background: #eefaff;
+      background: #EEEEEE;
       border-radius: 4px;
       margin-left: 20px;
       padding: 20px;
@@ -232,7 +232,7 @@ li {
       &.add {
         width: 100px;
         flex: none;
-        background: #00aaff;
+        background: #E60012;
         border-radius: 4px;
         text-align: center;
         color: #333;
@@ -318,7 +318,7 @@ li {
     cursor: pointer;
 
     &.active {
-      background: #22ccff;
+      background: #E60012;
     }
   }
 

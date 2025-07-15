@@ -61,10 +61,10 @@
               :class-name="dialogOrderStatus === 0 ? 'operate' : 'otherOperate'" min-width="120px">
               <template #default="scope">
                 <div class="before">
-                  <el-button v-if="scope.row.status === 2" type="primary" link @click="orderAccept(scope.row)">
+                  <el-button v-if="scope.row.status === 2" type="danger" link @click="orderAccept(scope.row)">
                     接单
                   </el-button>
-                  <el-button v-if="scope.row.status === 3" type="primary" link
+                  <el-button v-if="scope.row.status === 3" type="danger" link
                     @click="deliveryOrComplete(3, scope.row.id)">
                     派送
                   </el-button>
@@ -79,7 +79,7 @@
                   </el-button>
                 </div>
                 <div class="after">
-                  <el-button type="primary" link @click="goDetail(scope.row.id, scope.row.status, scope.row)">
+                  <el-button type="danger" link @click="goDetail(scope.row.id, scope.row.status, scope.row)">
                     查看
                   </el-button>
                 </div>
@@ -190,15 +190,15 @@
           <el-checkbox v-if="dialogOrderStatus === 2 && status === 2" v-model="isAutoNext">处理完自动跳转下一条</el-checkbox>
           <el-button v-if="dialogOrderStatus === 2" @click="orderReject(my_row), (isTableOperateBtn = false)">拒
             单</el-button>
-          <el-button v-if="dialogOrderStatus === 2" type="primary"
+          <el-button v-if="dialogOrderStatus === 2" type="danger"
             @click="orderAccept(my_row), (isTableOperateBtn = false)">接 单</el-button>
 
           <el-button v-if="[1, 3, 4, 5].includes(dialogOrderStatus)" @click="dialogVisible = false">返 回</el-button>
-          <el-button v-if="dialogOrderStatus === 3" type="primary" @click="deliveryOrComplete(3, my_row!.id)">派
+          <el-button v-if="dialogOrderStatus === 3" type="danger" @click="deliveryOrComplete(3, my_row!.id)">派
             送</el-button>
-          <el-button v-if="dialogOrderStatus === 4" type="primary" @click="deliveryOrComplete(4, my_row!.id)">完
+          <el-button v-if="dialogOrderStatus === 4" type="danger" @click="deliveryOrComplete(4, my_row!.id)">完
             成</el-button>
-          <el-button v-if="[1].includes(dialogOrderStatus)" type="primary" @click="cancelOrder(my_row)">取消订单</el-button>
+          <el-button v-if="[1].includes(dialogOrderStatus)" type="danger" @click="cancelOrder(my_row)">取消订单</el-button>
         </span>
       </template>
     </el-dialog>
@@ -222,7 +222,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="; (cancelDialogVisible = false), (cancelReason = '')">取 消</el-button>
-          <el-button type="primary" @click="confirmCancel">确 定</el-button>
+          <el-button type="danger" @click="confirmCancel">确 定</el-button>
         </span>
       </template>
     </el-dialog>

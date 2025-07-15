@@ -150,7 +150,7 @@ const registerFn = async () => {
           <el-input type="password" placeholder="请再次确认密码" v-model="form.repassword"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="btn-reg" @click="registerFn">注册</el-button>
+          <el-button type="danger" class="btn-reg" @click="registerFn">注册</el-button>
           <el-link class="router" type="info" @click="router.push('/login')">去登录</el-link>
         </el-form-item>
       </el-form>
@@ -251,7 +251,7 @@ body {
     font-size: 24px;
     font-weight: bold;
     text-align: center;
-    color: #00aaff;
+    color: #E42218;
     margin-bottom: 20px;
   }
 

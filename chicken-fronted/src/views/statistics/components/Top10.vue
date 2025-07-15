@@ -83,8 +83,8 @@ const initChart = () => {
               1,0,
               0,0,
               [
-                { offset: 0, color: '#00aaff' },
-                { offset: 1, color: '#22ccff' },
+                { offset: 0, color: '#E42218' },
+                { offset: 1, color: '#E42218' },
               ]
             ),
             label: {

@@ -225,7 +225,13 @@ const handleExport = async () => {
         <p> 已选时间：{{ tateData[0] }} 至 {{ tateData[tateData.length - 1] }} </p>
       </div>
     </div>
-    <el-button type="success" @click="handleExport">数据导出</el-button>
+    <el-button
+      type="danger"
+      @click="handleExport"
+      style="background-color: #E42218; border-color: #E42218"
+    >
+      数据导出
+    </el-button>
   </div>
   <div class="page">
     <el-row :gutter="20">
@@ -298,7 +304,7 @@ const handleExport = async () => {
     }
 
     .active {
-      background-color: #22ccff;
+      background-color: #E42218;
       font-weight: bold;
     }
 
