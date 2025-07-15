@@ -22,7 +22,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 public class DishServiceImpl implements DishService {
@@ -42,21 +48,61 @@ public class DishServiceImpl implements DishService {
         // 不仅要向dish表添加数据，还要向dish_flavor表添加口味数据
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);
+        
+        // 处理Base64图片
+        String base64Pic = dishDTO.getPic();
+        if (base64Pic != null && base64Pic.startsWith("data:image/")) {
+            String imageUrl = saveBase64Image(base64Pic);
+            dish.setPic(imageUrl); // 存储相对路径URL
+        }
+        
         dish.setStatus(1);
         dishMapper.addDish(dish);
         System.out.println("新增dish成功！");
-        // 由于在动态sql中，用了useGeneralKeys=true，因此会在插入数据后自动返回该行数据的主键id，
-        // 并且使用keyProperty="id"，表示将返回的主键值赋值给dish的id属性，下面就可以dish.getId()获取到id
+        
         Integer dishId = dish.getId();
-        // 有了DTO中的flavors，加上上面的dish_id，就可以批量插入口味数据到dish_flavor表了
-
-        // 1. 先拿到口味列表
+        
+        // 处理口味数据
         List<DishFlavor> flavorList = dishDTO.getFlavors();
         if (flavorList != null && !flavorList.isEmpty()) {
-            // 2. 再遍历这些口味，每条口味信息都加上dish_id字段，这样相当于DishFlavor就有id,name,value,dish_id四个完整字段了
             flavorList.forEach(dishFlavor -> dishFlavor.setDishId(dishId));
-            // 3. 最后批量插入口味数据，动态sql中需要根据,分割，foreach批量插入
             dishFlavorMapper.insertBatch(flavorList);
+        }
+    }
+
+    /**
+     * 保存Base64图片到文件系统
+     */
+    private String saveBase64Image(String base64Data) {
+        try {
+            // 解析Base64数据：data:image/jpeg;base64,/9j/4AAQ...
+            String[] dataParts = base64Data.split(",");
+            String imageData = dataParts[1]; // 实际的Base64数据
+            String mimeType = dataParts[0].split(";")[0].split(":")[1]; // image/jpeg
+            
+            // 根据MIME类型确定文件扩展名
+            String extension = mimeType.split("/")[1]; // jpeg
+            
+            // 生成唯一文件名
+            String fileName = UUID.randomUUID().toString() + "." + extension;
+            
+            // 修改为相对路径，确保在 chicken-backend 目录下
+            String uploadDir = "upload" + File.separator + "chicken_menu" + File.separator;
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            
+            // 解码并保存文件
+            byte[] imageBytes = Base64.getDecoder().decode(imageData);
+            String filePath = uploadDir + fileName;
+            Files.write(Paths.get(filePath), imageBytes);
+            
+            // 返回相对URL路径
+            return "/upload/chicken_menu/" + fileName;
+            
+        } catch (Exception e) {
+            throw new RuntimeException("图片保存失败");
         }
     }
 
@@ -94,8 +140,22 @@ public class DishServiceImpl implements DishService {
     public void updateDishWithFlavor(DishDTO dishDTO) {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);
+        
+        // 处理图片更新逻辑
+        String picData = dishDTO.getPic();
+        if (picData != null && picData.startsWith("data:image/")) {
+            // 如果是新上传的Base64图片，需要保存并更新URL
+            String imageUrl = saveBase64Image(picData);
+            dish.setPic(imageUrl);
+            
+            // 可选：删除旧图片文件（如果需要的话）
+            deleteOldImage(dishDTO.getId());
+        }
+        // 如果pic是URL格式，直接保持原样更新
+        
         // 先根据id更新菜品数据
         dishMapper.update(dish);
+        
         // 再根据where dishId=菜品id，去批量更新对应的口味数据
         Integer dishId = dishDTO.getId();
         // 原来的口味和新的口味的行数据量可能不一样，不能直接更新，只能批量删除再批量插入
@@ -106,6 +166,32 @@ public class DishServiceImpl implements DishService {
             flavorList.forEach(dishFlavor -> dishFlavor.setDishId(dishId));
             // 2. 再批量插入口味数据
             dishFlavorMapper.insertBatch(flavorList);
+        }
+    }
+
+    /**
+     * 删除旧图片文件（可选功能）
+     */
+    private void deleteOldImage(Integer dishId) {
+        try {
+            // 查询旧的图片路径
+            Dish oldDish = dishMapper.getById(dishId);
+            if (oldDish != null && oldDish.getPic() != null && 
+                oldDish.getPic().startsWith("/upload/chicken_menu/")) {
+                
+                // 构建文件路径
+                String oldFilePath = "upload" + oldDish.getPic().replace("/upload/", "/");
+                File oldFile = new File(oldFilePath);
+                
+                // 删除旧文件
+                if (oldFile.exists()) {
+                    oldFile.delete();
+                    System.out.println("删除旧图片文件：" + oldFilePath);
+                }
+            }
+        } catch (Exception e) {
+            // 删除失败不影响主流程
+            System.err.println("删除旧图片失败：" + e.getMessage());
         }
     }
 

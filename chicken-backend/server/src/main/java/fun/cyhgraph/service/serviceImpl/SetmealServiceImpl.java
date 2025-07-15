@@ -21,8 +21,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SetmealServiceImpl implements SetmealService {
@@ -39,8 +44,18 @@ public class SetmealServiceImpl implements SetmealService {
     public void addSetmeal(SetmealDTO setmealDTO) {
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealDTO, setmeal);
+        
+        // 处理Base64图片
+        String base64Pic = setmealDTO.getPic();
+        if (base64Pic != null && base64Pic.startsWith("data:image/")) {
+            String imageUrl = saveBase64Image(base64Pic);
+            setmeal.setPic(imageUrl); // 存储相对路径URL
+        }
+        
         setmeal.setStatus(1);  // 默认启用套餐
         setmealMapper.addSetmeal(setmeal);
+        System.out.println("新增套餐成功！");
+        
         // 套餐包含的菜品批量插入
         Integer setmealId = setmeal.getId();
         // 1. 遍历setmealDTO中的菜品列表，每个菜品都为其setmealId字段赋值
@@ -48,6 +63,44 @@ public class SetmealServiceImpl implements SetmealService {
         if (setmealDishes != null && !setmealDishes.isEmpty()) {
             setmealDishes.forEach(setmealDish -> setmealDish.setSetmealId(setmealId));
             setmealDishMapper.insertBatch(setmealDishes);
+        }
+    }
+
+    /**
+     * 保存Base64图片到文件系统
+     */
+    private String saveBase64Image(String base64Data) {
+        try {
+            // 解析Base64数据：data:image/jpeg;base64,/9j/4AAQ...
+            String[] dataParts = base64Data.split(",");
+            String imageData = dataParts[1]; // 实际的Base64数据
+            String mimeType = dataParts[0].split(";")[0].split(":")[1]; // image/jpeg
+            
+            // 根据MIME类型确定文件扩展名
+            String extension = mimeType.split("/")[1]; // jpeg
+            
+            // 生成唯一文件名
+            String fileName = UUID.randomUUID().toString() + "." + extension;
+            
+            // 修改为相对路径，确保在 chicken-backend 目录下
+            String uploadDir = "upload" + File.separator + "setmeal" + File.separator;
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            
+            // 解码并保存文件
+            byte[] imageBytes = Base64.getDecoder().decode(imageData);
+            String filePath = uploadDir + fileName;
+            Files.write(Paths.get(filePath), imageBytes);
+            
+            // 返回相对URL路径
+            return "/upload/setmeal/" + fileName;
+            
+        } catch (Exception e) {
+            System.err.println("套餐图片保存失败：" + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("套餐图片保存失败");
         }
     }
 
@@ -92,6 +145,19 @@ public class SetmealServiceImpl implements SetmealService {
     public void update(SetmealDTO setmealDTO) {
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealDTO, setmeal);
+        
+        // 处理图片更新逻辑
+        String picData = setmealDTO.getPic();
+        if (picData != null && picData.startsWith("data:image/")) {
+            // 如果是新上传的Base64图片，需要保存并更新URL
+            String imageUrl = saveBase64Image(picData);
+            setmeal.setPic(imageUrl);
+            
+            // 可选：删除旧图片文件（如果需要的话）
+            deleteOldImage(setmealDTO.getId());
+        }
+        // 如果pic是URL格式，直接保持原样更新
+        
         // 先修改套餐setmeal
         setmealMapper.update(setmeal);
         // 再修改套餐下的菜品setmealDish
@@ -99,8 +165,36 @@ public class SetmealServiceImpl implements SetmealService {
         Integer setmealId = setmealDTO.getId();
         setmealDishMapper.deleteBySetmealId(setmealId);
         List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
-        setmealDishes.forEach(setmealDish -> setmealDish.setSetmealId(setmealId));
-        setmealDishMapper.insertBatch(setmealDishes);
+        if (setmealDishes != null && !setmealDishes.isEmpty()) {
+            setmealDishes.forEach(setmealDish -> setmealDish.setSetmealId(setmealId));
+            setmealDishMapper.insertBatch(setmealDishes);
+        }
+    }
+
+    /**
+     * 删除旧图片文件
+     */
+    private void deleteOldImage(Integer setmealId) {
+        try {
+            // 查询旧的图片路径
+            Setmeal oldSetmeal = setmealMapper.getSetmealById(setmealId);
+            if (oldSetmeal != null && oldSetmeal.getPic() != null && 
+                oldSetmeal.getPic().startsWith("/upload/setmeal/")) {
+                
+                // 构建文件路径
+                String oldFilePath = "upload" + oldSetmeal.getPic().replace("/upload/", "/");
+                File oldFile = new File(oldFilePath);
+                
+                // 删除旧文件
+                if (oldFile.exists()) {
+                    oldFile.delete();
+                    System.out.println("删除旧套餐图片文件：" + oldFilePath);
+                }
+            }
+        } catch (Exception e) {
+            // 删除失败不影响主流程
+            System.err.println("删除旧套餐图片失败：" + e.getMessage());
+        }
     }
 
     /**
@@ -115,6 +209,12 @@ public class SetmealServiceImpl implements SetmealService {
                 throw new DeleteNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
             }
         }
+        
+        // 删除套餐图片文件
+        for(Integer id : ids) {
+            deleteOldImage(id);
+        }
+        
         setmealMapper.deleteBatch(ids);
         setmealDishMapper.deleteBatch(ids);
     }
@@ -157,5 +257,4 @@ public class SetmealServiceImpl implements SetmealService {
         setmealWithPicVO.setSetmealDishes(dishWithPics);
         return setmealWithPicVO;
     }
-
 }
