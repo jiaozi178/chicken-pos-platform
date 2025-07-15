@@ -134,8 +134,8 @@ const delete_btn = (row: any) => {
       <el-select size="large" class="input" clearable v-model="pageData.type" placeholder="选择分类类型">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
-      <el-button size="large" class="btn" round type="success" @click="init()">查询分类</el-button>
-      <el-button size="large" class="btn" type="primary" @click="router.push('/category/add')">
+      <el-button size="large" class="btn" round type="danger" @click="init()">查询分类</el-button>
+      <el-button size="large" class="btn" type="danger" @click="router.push('/category/add')">
         <el-icon style="font-size: 15px; margin-right: 10px;">
           <Plus />
         </el-icon>添加分类
@@ -162,8 +162,8 @@ const delete_btn = (row: any) => {
         <!-- scope 的父组件是 el-table -->
         <template #default="scope">
           <!-- <el-button class="play_btn" @click="playSong(scope.row.audio)">Play</el-button> -->
-          <el-button @click="update_btn(scope.row)" type="primary">修改</el-button>
-          <el-button @click="change_btn(scope.row)" plain :type="scope.row.status === 1 ? 'danger' : 'primary'">
+          <el-button @click="update_btn(scope.row)" type="danger">修改</el-button>
+          <el-button @click="change_btn(scope.row)" plain :type="scope.row.status === 1 ? 'danger' : 'danger'">
             {{ scope.row.status === 1 ? '停售' : '起售' }}</el-button>
           <el-button @click="delete_btn(scope.row)" type="danger">删除</el-button>
         </template>

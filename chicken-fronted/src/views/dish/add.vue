@@ -283,7 +283,7 @@ init()
         <img class="the_img" v-if="!form.pic" src="/src/assets/image/user_default.png" alt="" />
         <img class="the_img" v-else :src="form.pic" alt="" />
         <input type="file" accept="image/*" style="display: none" ref="inputRef1" @change="onFileChange1" />
-        <el-button type="primary" @click="chooseImg">
+        <el-button type="danger" @click="chooseImg">
           <el-icon style="font-size: 15px; margin-right: 10px;">
             <Plus />
           </el-icon>
@@ -331,8 +331,8 @@ init()
       </el-form-item>
     </el-form>
     <el-form-item>
-      <el-button class="submit_btn" type="success" @click="submit(0)">保存并退出</el-button>
-      <el-button v-if="form.id == 0" class="continue_btn" type="success" plain @click="submit(1)">保存并继续添加</el-button>
+      <el-button class="submit_btn" type="danger" @click="submit(0)">保存并退出</el-button>
+      <el-button v-if="form.id == 0" class="continue_btn" type="danger" plain @click="submit(1)">保存并继续添加</el-button>
       <el-button class="cancel_btn" type="info" plain @click="cancel">取消</el-button>
     </el-form-item>
   </el-card>
@@ -379,7 +379,7 @@ img {
   width: 800px;
 
   .addBut {
-    background: #409eff;
+    background: #E42218;
     display: inline-block;
     padding: 0px 20px;
     border-radius: 3px;

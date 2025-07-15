@@ -386,15 +386,15 @@ onMounted(async () => {
 
             <div class="btn_box">
               <div class="before">
-                <el-button v-if="scope.row.status === 2" type="primary" link
+                <el-button v-if="scope.row.status === 2" type="danger" link
                   @click="orderAccept(scope.row), (isTableOperateBtn = true)">
                   接单
                 </el-button>
-                <el-button v-if="scope.row.status === 3" type="primary" link
+                <el-button v-if="scope.row.status === 3" type="danger" link
                   @click="deliveryOrComplete(3, scope.row.id)">
                   派送
                 </el-button>
-                <el-button v-if="scope.row.status === 4" type="primary" link
+                <el-button v-if="scope.row.status === 4" type="danger" link
                   @click="deliveryOrComplete(4, scope.row.id)">
                   完成
                 </el-button>
@@ -412,7 +412,7 @@ onMounted(async () => {
               </div>
               <el-divider direction="vertical" />
               <div class="after">
-                <el-button type="primary" link class="blueBtn"
+                <el-button type="danger" link class="blueBtn"
                   @click="goDetail(scope.row.id, scope.row.status, scope.row)">
                   查看
                 </el-button>
@@ -550,15 +550,15 @@ onMounted(async () => {
           <div>
             <el-button v-if="dialogOrderStatus === 2" @click="orderReject(my_row), (isTableOperateBtn = false)">拒
               单</el-button>
-            <el-button v-if="dialogOrderStatus === 2" type="primary"
+            <el-button v-if="dialogOrderStatus === 2" type="danger"
               @click="orderAccept(my_row), (isTableOperateBtn = false)">接 单</el-button>
 
             <el-button v-if="[1, 3, 4, 5].includes(dialogOrderStatus)" @click="dialogVisible = false">返 回</el-button>
-            <el-button v-if="dialogOrderStatus === 3" type="primary" @click="deliveryOrComplete(3, my_row!.id)">派
+            <el-button v-if="dialogOrderStatus === 3" type="danger" @click="deliveryOrComplete(3, my_row!.id)">派
               送</el-button>
-            <el-button v-if="dialogOrderStatus === 4" type="primary" @click="deliveryOrComplete(4, my_row!.id)">完
+            <el-button v-if="dialogOrderStatus === 4" type="danger" @click="deliveryOrComplete(4, my_row!.id)">完
               成</el-button>
-            <el-button v-if="[1].includes(dialogOrderStatus)" type="primary"
+            <el-button v-if="[1].includes(dialogOrderStatus)" type="danger"
               @click="cancelOrder(my_row)">取消订单</el-button>
           </div>
         </span>
@@ -584,7 +584,7 @@ onMounted(async () => {
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="; (cancelDialogVisible = false), (cancelReason = '')">取 消</el-button>
-          <el-button type="primary" @click="confirmCancel">确 定</el-button>
+          <el-button type="danger" @click="confirmCancel">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -634,7 +634,7 @@ onMounted(async () => {
   }
 
   .active {
-    background-color: #22ccff;
+    background-color: #E60012;
     font-weight: bold;
   }
 
@@ -843,7 +843,7 @@ onMounted(async () => {
       min-height: 43px;
       line-height: 43px;
       background: #f0fbff;
-      border: 1px solid #88eeff;
+      border: 1px solid #E42218;
       border-radius: 4px;
       margin-top: 10px;
       padding: 6px;
@@ -854,7 +854,7 @@ onMounted(async () => {
         display: inline-block;
         min-width: 53px;
         height: 32px;
-        background: #88eeff;
+        background: #E42218;
         border-radius: 4px;
         text-align: center;
         line-height: 32px;
@@ -864,7 +864,7 @@ onMounted(async () => {
       }
 
       span {
-        color: #22ccff;
+        color: #E60012;
         line-height: 1.15;
       }
     }
@@ -1006,7 +1006,7 @@ onMounted(async () => {
   margin-top: 20px;
 
   .blueBtn {
-    background: #409eff;
+    background: #E60012;
     color: white;
   }
 }

@@ -104,7 +104,7 @@ init()
       </el-form-item>
     </el-form>
     <el-form-item>
-      <el-button class="submit_btn" type="success" @click="submit">添加</el-button>
+      <el-button class="submit_btn" type="danger" @click="submit">添加</el-button>
       <el-button class="cancel_btn" type="info" plain @click="cancel">取消</el-button>
     </el-form-item>
   </el-card>

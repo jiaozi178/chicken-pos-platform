@@ -117,7 +117,7 @@ const loginFn = async () => {
         <el-input type="password" v-model="form.password" placeholder="请输入密码"></el-input>
       </el-form-item>
       <el-form-item class="my-el-form-item">
-        <el-button type="primary" class="btn-login" @click="loginFn">登录</el-button>
+        <el-button type="danger" class="btn-login" @click="loginFn">登录</el-button>
         <el-link type="info" @click="$router.push('/reg')">去注册</el-link>
       </el-form-item>
     </el-form>
@@ -216,7 +216,7 @@ body {
     font-size: 24px;
     font-weight: bold;
     text-align: center;
-    color: #00aaff;
+    color: #E60012;
   }
 
   .el-form-item {

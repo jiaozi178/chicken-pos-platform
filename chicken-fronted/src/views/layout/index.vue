@@ -232,8 +232,8 @@ const webSocket = () => {
       ElNotification({
         title: jsonMsg.type === 1 ? '待接单' : '催单',
         message: jsonMsg.type === 1
-          ? `<span>您有1个<span style="color:#419EFF">订单待处理</span>,${jsonMsg.content},请及时接单</span>`
-          : `${jsonMsg.content}<span style='color:#419EFF;cursor: pointer'>去处理</span>`,
+          ? `<span>您有1个<span style="color:#E60012">订单待处理</span>,${jsonMsg.content},请及时接单</span>`
+          : `${jsonMsg.content}<span style='color:#E60012;cursor: pointer'>去处理</span>`,
         duration: 0,
         dangerouslyUseHTMLString: true,
         onClick: () => {
@@ -292,7 +292,7 @@ onBeforeUnmount(() => {
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="cancelStatus">取消</el-button>
-          <el-button type="primary" @click="fixStatus">确定</el-button>
+          <el-button type="danger" @click="fixStatus">确定</el-button>
         </div>
       </template>
     </el-dialog>
@@ -311,13 +311,13 @@ onBeforeUnmount(() => {
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="cancelForm">取消</el-button>
-          <el-button type="primary" @click="fixPwd">确定</el-button>
+          <el-button type="danger" @click="fixPwd">确定</el-button>
         </div>
       </template>
     </el-dialog>
     <el-container>
       <el-header>
-        <img src="../../assets/image/hanye_logo.png" class="logo" />
+        <img src="../../assets/image/chicken_logo.png" class="logo" />
         <el-icon class="icon1" v-if="isCollapse">
           <Expand @click.stop="isCollapse = !isCollapse" />
         </el-icon>
@@ -334,7 +334,7 @@ onBeforeUnmount(() => {
           </audio>
         </div>
         <el-dropdown style="float: right">
-          <el-button type="primary">
+          <el-button type="danger">
             {{ userInfoStore.userInfo ? userInfoStore.userInfo.account : '未登录' }}
             <el-icon class="arrow-down-icon"><arrow-down /></el-icon>
           </el-button>
@@ -350,7 +350,7 @@ onBeforeUnmount(() => {
       <el-container class="box1">
         <!-- 左侧导航菜单区域 -->
         <el-menu :width="isCollapse ? '640px' : '200px'" :default-active="getActiveAside()" :collapse="isCollapse"
-          background-color="#22aaee" text-color="#fff" unique-opened router>
+          background-color="#FACB4F" text-color="#fff" unique-opened router>
           <!-- 加了router模式，就会在激活导航时以 :index 作为path进行路径跳转（nb!不用自己写路由了!） -->
           <!-- 根据不同情况选择menu-item/submenu进行遍历，所以外层套template遍历，里面组件做判断看是否该次遍历到自己 -->
           <template v-for="item in menuList" :key="item.path">
@@ -367,7 +367,7 @@ onBeforeUnmount(() => {
           <el-main>
             <router-view></router-view>
           </el-main>
-          <el-footer>© 2024.5.21 hanye-take-out Tech and Fun. All rights reserved.</el-footer>
+          <el-footer>© 2025.7.21 chicken-take-out Tech and Fun. All rights reserved.</el-footer>
         </el-container>
       </el-container>
     </el-container>
@@ -377,12 +377,12 @@ onBeforeUnmount(() => {
 <style lang="less" scoped>
 .common-layout {
   height: 100%;
-  background-color: #eee;
+  background-color: #ffffff;
 }
 
 .el-header {
-  background-color: #00aaff;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #eebb00;
   line-height: 60px;
 
   .logo {
@@ -406,8 +406,8 @@ onBeforeUnmount(() => {
     margin: 15px 50px;
     padding: 0 10px;
     border-radius: 5px;
-    background-color: #eebb00;
-    color: #fff;
+    background-color: #E60012;
+    color: #ffffff;
   }
 }
 
@@ -433,9 +433,9 @@ onBeforeUnmount(() => {
   float: right;
   width: 80px;
   margin: 14px 20px;
-  background-color: #eebb00;
-  border-color: #eebb00;
-  color: #fff;
+  background-color: #E60012;
+  border-color: #E60012;
+  color: #ffffff;
 
   .arrow-down-icon {
     margin-left: 5px;
@@ -455,7 +455,7 @@ onBeforeUnmount(() => {
 
 .el-main {
   flex: 1;
-  background-color: #e9f5ff;
+  background-color: #F7E293;
   color: #333;
   /* text-align: center; */
   /* line-height: 80px; */
@@ -522,7 +522,7 @@ a:hover {
 
   .el-radio-group {
     &>.is-checked {
-      border: 1px solid #00aaff;
+      border: 1px solid #E42218;
     }
   }
 
@@ -562,7 +562,7 @@ a:hover {
 
 .el-menu {
   padding: 30px 0 0 0;
-  background-color: #445566;
+  background-color: #E42218;
 }
 
 .el-menu-item {
@@ -572,8 +572,8 @@ a:hover {
 }
 
 .el-menu-item.is-active {
-  background-color: #22ccff;
-  color: #fff;
+  background-color: #FFF000;
+  color: #E62524;
 }
 
 .el-menu--collapse {

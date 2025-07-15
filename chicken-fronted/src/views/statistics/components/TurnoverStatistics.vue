@@ -87,15 +87,15 @@ const initChart = () => {
         symbolSize: 10,
         itemStyle: {
           normal: {
-            color: '#00ccff',
+            color: '#E42218',
             lineStyle: {
-              color: '#00ccff',
+              color: '#E42218',
             },
           },
           emphasis: {
             color: '#fff',
             borderWidth: 5,
-            borderColor: '#00ccff',
+            borderColor: '#E42218',
           },
         },
         areaStyle: {
@@ -104,11 +104,11 @@ const initChart = () => {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             {
               offset: 0,
-              color: 'rgba(0, 221, 255, 1)'
+              color: '#E42218'
             },
             {
               offset: 1,
-              color: 'rgba(0, 221, 255, 0)'
+              color: '#E42218'
             }
           ])
         },

@@ -189,9 +189,9 @@ const deleteBatch = (row?: any) => {
       <el-select class="input" clearable v-model="pageData.status" placeholder="选择菜品状态" size="large">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
-      <el-button size="large" class="btn" round type="success" @click="showPageList()">查询菜品</el-button>
+      <el-button size="large" class="btn" round type="danger" @click="showPageList()">查询菜品</el-button>
       <el-button size="large" class="btn" round type="danger" @click="deleteBatch()">批量删除</el-button>
-      <el-button size="large" class="btn" type="primary" @click="to_add_update()">
+      <el-button size="large" class="btn" type="danger" @click="to_add_update()">
         <el-icon style="font-size: 15px; margin-right: 10px;">
           <Plus />
         </el-icon>添加菜品
@@ -226,8 +226,8 @@ const deleteBatch = (row?: any) => {
       <el-table-column prop="updateTime" label="上次操作时间" width="180px" align="center" />
       <el-table-column label="操作" width="200px" align="center">
         <template #default="scope">
-          <el-button @click="to_add_update(scope.row)" type="primary">修改</el-button>
-          <el-button @click="change_btn(scope.row)" plain :type="scope.row.status === 1 ? 'danger' : 'primary'">
+          <el-button @click="to_add_update(scope.row)" type="danger">修改</el-button>
+          <el-button @click="change_btn(scope.row)" plain :type="scope.row.status === 1 ? 'danger' : 'danger'">
             {{ scope.row.status === 1 ? '停售' : '起售' }}</el-button>
           <el-button @click="deleteBatch(scope.row)" type="danger">删除</el-button>
         </template>
