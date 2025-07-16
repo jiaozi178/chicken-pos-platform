@@ -4,7 +4,7 @@
     <view class="my_info">
       <!-- 头像部分 -->
       <view class="head">
-        <image class="head_image" :src="user.pic"></image>
+        <image class="head_image" :src="getImageUrl(user.pic)"></image>
       </view>
       <!-- 姓名、性别及手机号 -->
       <view class="phone_name">
@@ -90,6 +90,7 @@ import {getUserInfoAPI} from '@/api/user'
 import {getOrderPageAPI, reOrderAPI, urgeOrderAPI} from '@/api/order'
 import {cleanCartAPI} from '@/api/cart'
 import type {OrderPageDTO, OrderVO} from '@/types/order'
+import { getImageUrl } from '@/utils/imageUrl'
 
 const userStore = useUserStore()
 const childComp: any = ref(null)

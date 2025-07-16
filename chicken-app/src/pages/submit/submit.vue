@@ -35,7 +35,7 @@
           <view class="order-type">
             <view class="type_item" v-for="(obj, index) in cartList" :key="index">
               <view class="dish_img">
-                <image mode="aspectFill" :src="obj.pic" class="dish_img_url"></image>
+                <image mode="aspectFill" :src="getImageUrl(obj.pic)" class="dish_img_url"></image>
               </view>
               <view class="dish_info">
                 <view class="dish_name"> {{ obj.name }} </view>
@@ -137,6 +137,7 @@ import type {CartItem} from '@/types/cart'
 import {useAddressStore} from '@/stores/modules/address'
 import {onLoad, onShow} from '@dcloudio/uni-app'
 import {ref} from 'vue'
+import { getImageUrl } from '@/utils/imageUrl'
 
 // store
 const store = useAddressStore()
