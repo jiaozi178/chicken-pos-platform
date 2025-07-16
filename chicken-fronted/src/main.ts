@@ -7,6 +7,9 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+/**
+ * 在 Vue 生态中，interface 通常用于描述"是什么"（数据结构），而 type 更适合描述"怎么做"（类型关系和操作）
+ */
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)

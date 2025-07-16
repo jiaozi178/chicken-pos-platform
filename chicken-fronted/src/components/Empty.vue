@@ -2,8 +2,8 @@
 <template>
   <div class="empty-box">
     <div class="img-box">
-      <img v-if="!props.isSearch" src="../assets/image/table_empty.png" alt="">
-      <img v-else src="../assets/image/search_table_empty.png">
+      <img class="the-higher-one" v-if="!props.isSearch" src="../assets/image/table_empty.png" alt="">
+      <img class="the-shorter-one" v-else src="../assets/image/search_table_empty.png">
       <p>{{ !props.isSearch ? '这里空空如也~' : 'Sorry，木有找到您搜索的内容哦~' }}</p>
     </div>
   </div>
@@ -23,10 +23,18 @@ const props = defineProps({
   text-align: center;
   margin: 20px 0;
 
-  img {
-    margin: 0 atuo;
+  img.the-shorter-one {
+    margin: 0 auto;
     width: 238px;
     height: 184px;
+    margin-top: 20px;
+    margin-bottom: 26px;
+  }
+
+  img.the-higher-one {
+    margin: 0 auto;
+    width: 215px;
+    height: 235px;
     margin-top: 20px;
     margin-bottom: 26px;
   }
