@@ -25,7 +25,7 @@
             hover-class="none"
             :url="`/pages/detail/detail?${categoryList[activeIndex].sort < 20 ? 'dishId' : 'setmealId'}=${dish.id}`"
           >
-            <image class="image" :src="dish.pic"></image>
+            <image class="image" :src="getImageUrl(dish.pic)"></image>
             <view class="dishinfo">
               <view class="name ellipsis">{{ dish.name }}</view>
               <view class="detail ellipsis">{{ dish.detail }}</view>
@@ -160,6 +160,7 @@ import type {CartDTO, CartItem} from '@/types/cart'
 import {onLoad, onShow} from '@dcloudio/uni-app'
 import {ref} from 'vue'
 import Navbar from './components/Navbar.vue'
+import { getImageUrl } from '@/utils/imageUrl'
 
 // ------ data ------
 // 店铺营业状态
@@ -206,6 +207,7 @@ const getDishOrSetmealList = async (index: number) => {
   } else {
     res = await getSetmealListAPI(categoryList.value[index].id)
   }
+
   console.log(res)
   dishList.value = res.data
 }
