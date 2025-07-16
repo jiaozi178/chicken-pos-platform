@@ -32,6 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
+### Redis ###
+dump.rdb
+
 ### from Chase ###
 ### server/src/main/resources/application-dev.yml
 

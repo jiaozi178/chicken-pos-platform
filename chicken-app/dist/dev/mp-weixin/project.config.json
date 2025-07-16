@@ -19,11 +19,7 @@
   },
   "compileType": "miniprogram",
   "libVersion": "3.8.11",
-<<<<<<< HEAD
   "appid": "wx6b9bdc2036a4dd99",
-=======
-  "appid": "wx20a9089f2fad22b3",
->>>>>>> origin/main
   "projectname": "",
   "condition": {
     "search": {
