@@ -121,6 +121,12 @@
 				"selectedIconPath": "static/tabs/home.png"
 			},
 			{
+				"text": "点餐",
+				"pagePath": "pages/order/order",
+				"iconPath": "static/tabs/buy2.png",
+				"selectedIconPath": "static/tabs/buy.png"
+			},
+			{
 				"text": "我的",
 				"pagePath": "pages/my/my",
 				"iconPath": "static/tabs/my2.png",
