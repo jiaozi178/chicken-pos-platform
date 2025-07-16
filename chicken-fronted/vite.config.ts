@@ -15,7 +15,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     // public: '0.0.0.0:5173', // 本地的ip:端口号
-    port: 5174,
+    port: 5173,
     open: true,
     proxy: {
       '/api': {
@@ -26,11 +26,6 @@ export default defineConfig({
         changeOrigin: true,
         // /api去掉，变成空串，因为它只是一个标识而已，并不是路径
         rewrite: (path) => path.replace(/^\/api/, '')
-      },
-      '/upload': {
-        target: 'http://localhost:8081', // 后端服务地址
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/upload/, '/upload')
       }
     }
   }
