@@ -15,7 +15,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     // public: '0.0.0.0:5173', // 本地的ip:端口号
-    port: 5174,
+    port: 5173,
     open: true,
     proxy: {
       '/api': {
