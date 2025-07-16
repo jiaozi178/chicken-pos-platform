@@ -87,21 +87,21 @@
     </div>
 
     <!-- 购物车 -->
-<!--    <div v-if="cart.length > 0" class="cart-section">-->
-<!--      <h3>购物车 ({{ getTotalItems() }})</h3>-->
-<!--      <div class="cart-items">-->
-<!--        <div v-for="item in cart" :key="item.id" class="cart-item">-->
-<!--          <span class="item-name">{{ item.name }}</span>-->
-<!--          <span class="item-quantity">x{{ item.quantity }}</span>-->
-<!--          <span class="item-price">¥{{ (item.price * item.quantity).toFixed(2) }}</span>-->
-<!--          <button @click="removeFromCart(item.id)" class="remove-btn">删除</button>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <div class="cart-total">-->
-<!--        <strong>总计: ¥{{ getTotalPrice() }}</strong>-->
-<!--        <button @click="checkout" class="checkout-btn">结账</button>-->
-<!--      </div>-->
-<!--    </div>-->
+    <div v-if="cart.length > 0" class="cart-section">
+      <h3>购物车 ({{ getTotalItems() }})</h3>
+      <div class="cart-items">
+        <div v-for="item in cart" :key="item.id" class="cart-item">
+          <span class="item-name">{{ item.name }}</span>
+          <span class="item-quantity">x{{ item.quantity }}</span>
+          <span class="item-price">¥{{ (item.price * item.quantity).toFixed(2) }}</span>
+          <button @click="removeFromCart(item.id)" class="remove-btn">删除</button>
+        </div>
+      </div>
+      <div class="cart-total">
+        <strong>总计: ¥{{ getTotalPrice() }}</strong>
+        <button @click="checkout" class="checkout-btn">结账</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -112,6 +112,7 @@ import { ref, computed, type Ref } from 'vue'
 interface Category {
   id: string
   name: string
+  description: string
 }
 
 interface Product {
@@ -140,7 +141,8 @@ const categories: Ref<Category[]> = ref([
   { id: 'chicken', name: '鸡排类' },
   { id: 'drink', name: '饮品类' },
   { id: 'side', name: '小食类' },
-  { id: 'combo', name: '套餐类' }
+  { id: 'combo', name: '套餐类' },
+  { id: 'combo1', name: '111套餐类' }
 ])
 
 // 商品数据

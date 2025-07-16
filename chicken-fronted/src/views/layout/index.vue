@@ -15,6 +15,21 @@ const isCollapse = ref(false)
 
 const menuList = [
   {
+    title: '菜单',
+    path: '/menu',
+    icon: 'pieChart',
+  },
+  {
+    title: '地址',
+    path: '/address',
+    icon: 'pieChart',
+  },
+  // {
+  //   title: '购物车',
+  //   path: '/cart',
+  //   icon: 'pieChart',
+  // },
+  {
     title: '控制台',
     path: '/dashboard',
     icon: 'pieChart',

@@ -6,8 +6,7 @@
       <!-- logo文字 -->
       <view class="logo">
         <image class="back" src="@/static/icon/back.png" @tap="back"></image>
-        <image class="brand" src="@/static/images/logo.png"></image>
-        <text class="logo-text">REVERSE · 启动</text>
+        <text class="logo-text">正新鸡排</text>
       </view>
       <view class="logo">
         <text class="logo-text"></text>
@@ -67,7 +66,7 @@ const phone = () => {
 
 /* 自定义导航条 */
 .navbar {
-  background-image: url(@/static/images/navigator_bg.png);
+  background-image: url(@/static/images/navigator_bg1.png);
   background-size: cover;
   position: relative;
   display: flex;

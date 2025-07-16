@@ -9,6 +9,24 @@ const router = createRouter({
       redirect: '/dashboard', // 将dashboard设为首页home
       children: [
         {
+          path: 'menu',
+          name: 'menu',
+          // lazy loading
+          component: () => import('./views/user/menu.vue')
+        },
+        {
+          path: 'cart',
+          name: 'cart',
+          // lazy loading
+          component: () => import('./views/user/cart.vue')
+        },
+        {
+          path: 'address',
+          name: 'address',
+          // lazy loading
+          component: () => import('./views/user/address.vue')
+        },
+        {
           path: 'dashboard',
           name: 'dashboard',
           // lazy loading
