@@ -13,7 +13,6 @@ spring:
     redis:
       host: ${hanye.redis.host}
       port: ${hanye.redis.port}
-      password: ${hanye.redis.password}
       database: ${hanye.redis.database}
 
 # ??mybatis
