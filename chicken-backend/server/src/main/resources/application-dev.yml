@@ -3,8 +3,13 @@ hanye:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/chicken_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
     username: root
+<<<<<<< HEAD
     password: 2004
+=======
+    password: a123456
+>>>>>>> origin/main
   redis:
+    #    enable: false
     host: localhost
     port: 6379
     password:
@@ -22,20 +27,25 @@ hanye:
     notifyUrl: https://9ea0754.r19.cpolar.top/notify/paySuccess
     refundNotifyUrl: https://9ea0754.r19.cpolar.top/notify/refundSuccess
 
-# 添加 Spring Boot 配置
+# Spring Boot 配置
 spring:
   sql:
     init:
-      # 指定建表脚本位置
-      schema-locations: classpath:sql/schema.sql
-      # 只在表不存在时执行
+      # 指定建表脚本和数据脚本位置（按顺序执行）
+      schema-locations: 
+        - classpath:sql/chicken_db_schema.sql
+      data-locations:
+        - classpath:sql/chicken_db_data.sql
+      # 执行模式：always表示每次启动都检查执行
       mode: always
-      # 如果表已存在继续执行（但脚本需要是 create if not exists）
+      # 如果脚本执行出错继续执行（由于使用了if not exists，建议设为true）
       continue-on-error: true
       # 字符编码
-      encoding: utf-8
+      encoding: UTF-8
       # 脚本分隔符
       separator: ;
+      # 执行顺序：先执行schema再执行data
+      schema-before-data: true
   datasource:
     # 使用自定义数据源配置
     driver-class-name: ${hanye.datasource.driver-class-name}
@@ -57,3 +67,5 @@ logging:
   level:
     fun.cyhgraph: debug
     org.springframework.jdbc: debug
+    # 显示 SQL 初始化过程的日志
+    org.springframework.boot.autoconfigure.sql.init: debug
