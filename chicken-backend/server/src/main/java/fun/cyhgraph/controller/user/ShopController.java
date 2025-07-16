@@ -20,8 +20,8 @@ public class ShopController {
 
     @GetMapping("/status")
     public Result<Integer> getStatus(){
-        Integer status =  (Integer)redisTemplate.opsForValue().get(KEY);
-        log.info("当前店铺状态为：{}", status == 1 ? "营业中" : "打烊中");
-        return Result.success(status);
+        //Integer status =  (Integer)redisTemplate.opsForValue().get(KEY);
+        //log.info("当前店铺状态为：{}", status == 1 ? "营业中" : "打烊中");
+        return Result.success(1);
     }
 }

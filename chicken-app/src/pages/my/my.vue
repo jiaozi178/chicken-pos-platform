@@ -228,10 +228,17 @@ const goMyself = () => {
 </script>
 
 <style lang="less" scoped>
+	
+.page {
+	background-color: #f7e293;
+}
+
+
+
 .my_info {
   height: 200rpx;
   width: 750rpx;
-  background-color: #cceeff;
+  background-color: #f7e293;
   display: flex;
   // 头像
   .head {
@@ -290,7 +297,7 @@ const goMyself = () => {
 
 .white_box {
   margin: 20rpx;
-  background-color: #fff;
+  background-color: #f7e293;
   border-radius: 20rpx;
 
   .bottom_text {

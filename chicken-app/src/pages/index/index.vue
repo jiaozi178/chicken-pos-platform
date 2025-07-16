@@ -9,16 +9,15 @@
       :interval="2000"
     >
       <swiper-item>
-        <image mode="widthFix" src="../../static/images/swp1.png" />
+        <image mode="widthFix" src="../../static/images/swp4.png" />
       </swiper-item>
       <swiper-item>
-        <image mode="widthFix" src="../../static/images/swp2.png" />
+        <image mode="widthFix" src="../../static/images/swp6.png" />
       </swiper-item>
       <swiper-item>
-        <image mode="widthFix" src="../../static/images/swp3.png" />
+        <image mode="widthFix" src="../../static/images/swp5.png" />
       </swiper-item>
     </swiper>
-    <image src="../../static/images/home.png" mode="scaleToFill" />
     <view class="title" @tap="toOrderPage">点击开始点餐</view>
   </view>
 </template>
@@ -41,14 +40,19 @@ swiper {
   }
 }
 
+.page {
+	background-color: #f7e293;
+}
+
 .container {
-  margin: 20rpx 80rpx 300rpx 80rpx;
+  //margin: 20rpx 80rpx 300rpx 80rpx;
   // margin-bottom: 100rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 90vh;
+  height: 100vh;
+  background-color: #f7e293;
 }
 
 image {
@@ -61,7 +65,7 @@ image {
 .title {
   width: 300rpx;
   height: 80rpx;
-  background-color: #00aaff;
+  background-color: #e42218;
   border-radius: 20rpx;
   font-size: 30rpx;
   color: #fff;

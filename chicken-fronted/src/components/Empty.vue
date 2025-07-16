@@ -2,14 +2,18 @@
 <template>
   <div class="empty-box">
     <div class="img-box">
+<<<<<<< HEAD
+      <img src="../static/images/table_empty.png" alt="" />
+=======
       <img class="the-higher-one" v-if="!props.isSearch" src="../assets/image/table_empty.png" alt="">
       <img class="the-shorter-one" v-else src="../assets/image/search_table_empty.png">
+>>>>>>> origin/main
       <p>{{ !props.isSearch ? '这里空空如也~' : 'Sorry，木有找到您搜索的内容哦~' }}</p>
     </div>
   </div>
 </template>
 
-<script setup lang='ts'>
+<script setup lang="ts">
 const props = defineProps({
   isSearch: {
     type: Boolean,

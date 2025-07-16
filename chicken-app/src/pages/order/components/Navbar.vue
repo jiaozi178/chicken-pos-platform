@@ -6,8 +6,7 @@
       <!-- logo文字 -->
       <view class="logo">
         <image class="back" src="@/static/icon/back.png" @tap="back"></image>
-        <image class="brand" src="@/static/images/logo.png"></image>
-        <text class="logo-text">REVERSE · 启动</text>
+        <text class="logo-text">正新鸡排</text>
       </view>
       <view class="logo">
         <text class="logo-text"></text>
@@ -21,7 +20,7 @@
         <text class="price">配送费6元</text>
       </view>
       <view class="info2">
-        <text class="address">餐厅地址：广州市番禺区亚运城广场</text>
+        <text class="address">餐厅地址：长沙市岳麓区牛耳科教</text>
         <uni-icons @click="phone" custom-prefix="iconfont" type="icon-dianhua" size="20"></uni-icons>
       </view>
     </view>
@@ -67,7 +66,7 @@ const phone = () => {
 
 /* 自定义导航条 */
 .navbar {
-  background-image: url(@/static/images/navigator_bg.png);
+  background-image: url(@/static/images/navigator_bg1.png);
   background-size: cover;
   position: relative;
   display: flex;
