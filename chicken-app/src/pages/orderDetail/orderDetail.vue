@@ -35,7 +35,7 @@
     <view class="order-type">
       <view class="type_item" v-for="(obj, index) in order.orderDetailList" :key="index">
         <view class="dish_img">
-          <image mode="aspectFill" :src="obj.pic" class="dish_img_url"></image>
+          <image mode="aspectFill" :src="getImageUrl(obj.pic)" class="dish_img_url"></image>
         </view>
         <view class="dish_info">
           <view class="dish_name"> {{ obj.name }} </view>
@@ -116,6 +116,7 @@ import {getOrderAPI, cancelOrderAPI, reOrderAPI, urgeOrderAPI, payOrderAPI} from
 import {cleanCartAPI} from '@/api/cart'
 import {useCountdownStore} from '@/stores/modules/countdown'
 import type {Order, OrderVO} from '@/types/order'
+import { getImageUrl } from '@/utils/imageUrl'
 
 const childComp: any = ref(null)
 

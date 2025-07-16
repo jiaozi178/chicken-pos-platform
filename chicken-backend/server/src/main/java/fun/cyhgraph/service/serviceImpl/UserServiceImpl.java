@@ -15,9 +15,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
+import java.nio.file.Files;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -73,7 +76,42 @@ public class UserServiceImpl implements UserService {
     public void update(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
+
+        // 处理Base64头像图片
+        String base64Avatar = userDTO.getPic();
+        if (base64Avatar != null && base64Avatar.startsWith("data:image/")) {
+            String avatarUrl = saveBase64Avatar(base64Avatar);
+            user.setPic(avatarUrl); // 存储相对路径URL
+        }
+
         userMapper.update(user);
+    }
+
+    /**
+     * 保存Base64头像图片到文件系统
+     */
+    private String saveBase64Avatar(String base64Data) {
+        try {
+            String[] dataParts = base64Data.split(",");
+            String imageData = dataParts[1];
+            String mimeType = dataParts[0].split(";")[0].split(":")[1];
+            String extension = mimeType.split("/")[1];
+            String fileName = java.util.UUID.randomUUID().toString() + "." + extension;
+
+            String uploadDir = "upload" + File.separator + "avatars" + File.separator;
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            byte[] imageBytes = java.util.Base64.getDecoder().decode(imageData);
+            String filePath = uploadDir + fileName;
+            Files.write(Paths.get(filePath), imageBytes);
+
+            return "/upload/avatars/" + fileName;
+        } catch (Exception e) {
+            throw new RuntimeException("头像图片保存失败");
+        }
     }
 
     /**

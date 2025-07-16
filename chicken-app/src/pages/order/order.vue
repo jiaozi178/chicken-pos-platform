@@ -118,7 +118,7 @@
       <scroll-view class="card_order_list" scroll-y scroll-top="40rpx">
         <view class="type_item" v-for="(obj, index) in cartList" :key="index">
           <view class="dish_img">
-            <image mode="aspectFill" :src="obj.pic" class="dish_img_url"></image>
+            <image mode="aspectFill" :src="getImageUrl(obj.pic)" class="dish_img_url"></image>
           </view>
           <view class="dish_info">
             <view class="dish_name"> {{ obj.name }} </view>
