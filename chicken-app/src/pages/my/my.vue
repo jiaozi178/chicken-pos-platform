@@ -57,7 +57,7 @@
             <view class="history_item_order_id">订单号：{{ item.number }}</view>
             <scroll-view class="scroll_container" scroll-x>
               <view v-for="(dish, index) in item.orderDetailList" :key="index" class="image_box">
-                <image :src="dish.pic" />
+                <image :src="getImageUrl(dish.pic)" />
               </view>
             </scroll-view>
             <view class="history_item_order_time">{{ item.orderTime }}</view>
