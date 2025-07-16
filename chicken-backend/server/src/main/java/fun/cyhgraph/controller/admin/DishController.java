@@ -31,11 +31,15 @@ public class DishController {
      */
     @PostMapping
     public Result addDishWithFlavor(@RequestBody DishDTO dishDTO){
+        System.out.println("=== 开始新增菜品 ===");
         log.info("要添加的菜品信息：{}", dishDTO);
         dishService.addDishWithFlavor(dishDTO);
+        System.out.println("新增dish成功！");
         // 清理缓存数据
         String key = "dish_" + dishDTO.getCategoryId();
         cleanCache(key);
+        System.out.println("清理成功");
+
         return Result.success();
     }
 
