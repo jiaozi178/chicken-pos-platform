@@ -1,1 +1,0 @@
-"use strict";const t=require("../utils/http.js");exports.getDishByIdAPI=s=>t.http({method:"GET",url:`/user/dish/dish/${s}`}),exports.getDishListAPI=s=>t.http({method:"GET",url:`/user/dish/list/${s}`});
