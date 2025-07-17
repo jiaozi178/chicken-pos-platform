@@ -1,4 +1,6 @@
 <template>
+  <Navbar title="历史订单" :show-back="true" />
+
   <view class="history_top">
     <view
       v-for="(item, index) in statusOptions"
@@ -54,6 +56,7 @@ import {getOrderPageAPI, reOrderAPI} from '@/api/order'
 import {cleanCartAPI} from '@/api/cart'
 import type {OrderPageDTO, OrderVO} from '@/types/order'
 import { getImageUrl } from '@/utils/imageUrl'
+import Navbar from '@/components/navbar/Navbar.vue'
 
 const childComp: any = ref(null)
 

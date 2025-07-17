@@ -1,4 +1,6 @@
 <template>
+  <Navbar title="提交成功" :show-back="true" />
+  
   <view class="container">
     <image src="../../static/icon/饿饿.png" mode="scaleToFill" />
     <view class="pay">支付成功</view>
@@ -14,6 +16,7 @@
 <script lang="ts" setup>
 import {onLoad} from '@dcloudio/uni-app'
 import {ref} from 'vue'
+import Navbar from '@/components/navbar/Navbar.vue'
 
 const orderId = ref(0)
 const orderNumber = ref('')

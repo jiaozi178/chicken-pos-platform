@@ -1,4 +1,6 @@
 <template>
+	<Navbar title="正新鸡排" />
+
 	<view class="container">
 		<view class="banner">
 			<swiper
@@ -64,6 +66,8 @@
 </template>
 
 <script lang="ts" setup>
+import Navbar from '@/components/navbar/Navbar.vue'
+
 const takeout = () =>{
   uni.switchTab({
     url: '/pages/order/order',

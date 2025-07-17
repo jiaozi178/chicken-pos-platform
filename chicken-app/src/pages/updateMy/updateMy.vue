@@ -1,10 +1,11 @@
 <template>
+  <Navbar title="修改信息" :show-back="true" />
   <!-- 信息input框列表 -->
   <view class="submit">
     <form @submit="submit">
       <view class="pic_box" @click="picChange">
         <image v-if="!user.pic" src="../../static/images/user_default.png" mode="aspectFill"></image>
-        <image v-else :src="user.pic" mode="aspectFill"></image>
+        <image v-else :src="getImageUrl(user.pic)" mode="aspectFill"></image>
         <view class="text">点击上传头像</view>
       </view>
       <view class="radio">
@@ -32,6 +33,8 @@ import {ref, reactive} from 'vue'
 import {onLoad} from '@dcloudio/uni-app'
 import {useUserStore} from '@/stores/modules/user'
 import {getUserInfoAPI, updateUserAPI} from '@/api/user'
+import { getImageUrl } from '@/utils/imageUrl'
+import Navbar from '@/components/navbar/Navbar.vue'
 
 const userStore = useUserStore()
 

@@ -1,4 +1,5 @@
 <template>
+  <Navbar title="个人中心" />
   <view class="page">
     <!-- 1、个人信息 -->
     <view class="my_info">
@@ -91,6 +92,7 @@ import {getOrderPageAPI, reOrderAPI, urgeOrderAPI} from '@/api/order'
 import {cleanCartAPI} from '@/api/cart'
 import type {OrderPageDTO, OrderVO} from '@/types/order'
 import { getImageUrl } from '@/utils/imageUrl'
+import Navbar from '@/components/navbar/Navbar.vue';
 
 const userStore = useUserStore()
 const childComp: any = ref(null)
@@ -212,20 +214,21 @@ const toOrderDetail = (id: number) => {
 }
 
 const goAddress = () => {
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/address/address',
   })
 }
 const goHistory = () => {
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/history/history',
   })
 }
 const goMyself = () => {
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/updateMy/updateMy',
   })
 }
+
 </script>
 
 <style lang="less" scoped>

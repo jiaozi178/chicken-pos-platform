@@ -1,4 +1,6 @@
 <template>
+  <Navbar title="订单详情" :show-back="true" />
+
   <view class="white_box">
     <view class="orderDetail">{{ statusList[order.status as number].name }}</view>
     <view class="time_box" v-if="order.status === 1">
@@ -116,6 +118,7 @@ import {getOrderAPI, cancelOrderAPI, reOrderAPI, urgeOrderAPI, payOrderAPI} from
 import {cleanCartAPI} from '@/api/cart'
 import {useCountdownStore} from '@/stores/modules/countdown'
 import type {Order, OrderVO} from '@/types/order'
+import Navbar from '@/components/navbar/Navbar.vue'
 import { getImageUrl } from '@/utils/imageUrl'
 
 const childComp: any = ref(null)
