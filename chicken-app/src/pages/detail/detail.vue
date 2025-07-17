@@ -1,8 +1,11 @@
 <template>
+  <Navbar title="菜品详情" :show-back="true" />
+
   <!-- 菜品详情，包括口味 -->
   <view class="dish" v-if="dish">
-    <view class="title">菜品详情</view>
-    <image class="image" :src="dish.pic" mode="aspectFill" />
+    <view class="image-container">
+      <image class="image" :src="getImageUrl(dish.pic)" mode="aspectFill" />
+    </view>
     <view class="dishinfo">
       <view class="name ellipsis">{{ dish.name }}</view>
       <view class="detail ellipsis">{{ dish.detail }}</view>
@@ -39,7 +42,7 @@
     <view class="title">套餐详情</view>
     <!-- 菜品列表 -->
     <view v-for="item in setmeal.setmealDishes" :key="item.name" class="setmeal_item">
-      <image :src="item.pic" />
+      <image :src="getImageUrl(item.pic)" />
       <view class="dishinfo">
         <view class="name ellipsis">{{ item.name }}</view>
         <view class="detail ellipsis">{{ item.detail }}</view>
@@ -123,7 +126,7 @@
       <scroll-view class="card_order_list" scroll-y scroll-top="40rpx">
         <view class="type_item" v-for="(obj, index) in cartList" :key="index">
           <view class="dish_img">
-            <image mode="aspectFill" :src="obj.pic" class="dish_img_url"></image>
+            <image mode="aspectFill" :src="getImageUrl(obj.pic)" class="dish_img_url"></image>
           </view>
           <view class="dish_info">
             <view class="dish_name"> {{ obj.name }} </view>
@@ -159,6 +162,8 @@ import {getDishByIdAPI} from '@/api/dish'
 import {getSetmealAPI} from '@/api/setmeal'
 import {onLoad, onShow} from '@dcloudio/uni-app'
 import {ref} from 'vue'
+import Navbar from '@/components/navbar/Navbar.vue'
+import { getImageUrl } from '@/utils/imageUrl'
 
 // ------ data ------
 // 分类列表
@@ -472,9 +477,20 @@ const submitOrder = () => {
 }
 
 .dish {
-  .image {
+  .image-container {
     width: 100%;
     height: 400rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .image {
+    height: 400rpx;
+    width: 400rpx;
+    object-fit: contain;
+    display: block;
   }
 
   .dishinfo {

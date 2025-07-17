@@ -1,5 +1,7 @@
 <template>
-  <Navbar />
+  <Navbar title="菜单" />
+  <InfoBar ref="infobarRef"/>
+
   <view class="viewport">
     <!-- 分类 -->
     <view class="categories">
@@ -158,9 +160,13 @@ import type {DishItem, FlavorItem, DishToCartItem} from '@/types/dish'
 import type {SetmealItem} from '@/types/setmeal'
 import type {CartDTO, CartItem} from '@/types/cart'
 import {onLoad, onShow} from '@dcloudio/uni-app'
-import {ref} from 'vue'
-import Navbar from './components/Navbar.vue'
+import {ref, onMounted} from 'vue'
+import Navbar from '@/components/navbar/Navbar.vue'
+import InfoBar from './components/InfoBar.vue'
 import { getImageUrl } from '@/utils/imageUrl'
+
+// 获取 Navbar 组件的引用
+const infobarRef = ref<InstanceType<typeof InfoBar> | null>(null);
 
 // ------ data ------
 // 店铺营业状态
@@ -401,10 +407,21 @@ onLoad(async () => {
   await getCategoryData()
   await getDishOrSetmealList(0) // 默认加载第一个分类下的菜品列表
   await getCartList() // 获取购物车列表(一开始为空)
+
+  // 页面加载时也显示一次店铺简介
+  if (infobarRef.value) {
+    infobarRef.value.showRestaurantInfo();
+  }
 })
+
 onShow(async () => {
   await getCategoryData()
   await getCartList()
+
+  // 每次页面显示时显示餐厅简介
+  if (infobarRef.value) {
+    infobarRef.value.showRestaurantInfo();
+  }
 })
 </script>
 
@@ -503,7 +520,6 @@ onShow(async () => {
 }
 
 .viewport {
-  padding-top: 130px; // 上方为固定的简介栏，调整出一定高度来（不然不知道为啥fixed不占一段高度）
   height: 100%;
   display: flex;
   flex-direction: column;

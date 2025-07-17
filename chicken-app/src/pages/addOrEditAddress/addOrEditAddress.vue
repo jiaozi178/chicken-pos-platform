@@ -1,4 +1,6 @@
 <template>
+  <Navbar title="新增/修改地址" :show-back="true" />
+
   <view class="customer-box">
     <view class="add_edit" :style="{height: `calc(100% - ${statusBarHeight} - 44px)`}">
       <form class="form_address">
@@ -78,6 +80,7 @@ import {addAddressAPI, deleteAddressAPI, getAddressByIdAPI, updateAddressAPI} fr
 import {onLoad, onShow, onUnload} from '@dcloudio/uni-app'
 import {reactive} from 'vue'
 import type {Address} from '@/types/address'
+import Navbar from '@/components/navbar/Navbar.vue'
 
 // 自己实现的省市区选择器
 let fullLocationCode: [string, string, string] = ['', '', '']

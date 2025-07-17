@@ -1,4 +1,5 @@
 <template>
+  <Navbar title="个人中心" />
   <view class="page">
     <!-- 1、个人信息 -->
     <view class="my_info">
@@ -57,7 +58,7 @@
             <view class="history_item_order_id">订单号：{{ item.number }}</view>
             <scroll-view class="scroll_container" scroll-x>
               <view v-for="(dish, index) in item.orderDetailList" :key="index" class="image_box">
-                <image :src="getImageUrl(dish.pic)" />
+                <image :src="getImageUrl(dish.pic ?? '')" />
               </view>
             </scroll-view>
             <view class="history_item_order_time">{{ item.orderTime }}</view>
@@ -91,6 +92,7 @@ import {getOrderPageAPI, reOrderAPI, urgeOrderAPI} from '@/api/order'
 import {cleanCartAPI} from '@/api/cart'
 import type {OrderPageDTO, OrderVO} from '@/types/order'
 import { getImageUrl } from '@/utils/imageUrl'
+import Navbar from '@/components/navbar/Navbar.vue';
 
 const userStore = useUserStore()
 const childComp: any = ref(null)
@@ -212,256 +214,243 @@ const toOrderDetail = (id: number) => {
 }
 
 const goAddress = () => {
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/address/address',
   })
 }
 const goHistory = () => {
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/history/history',
   })
 }
 const goMyself = () => {
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/updateMy/updateMy',
   })
 }
+
 </script>
 
 <style lang="less" scoped>
 	
 .page {
-	background-color: #f7e293;
+  background-color: #f7e293;
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+  padding-top: 20rpx;
 }
 
-
-
 .my_info {
-  height: 200rpx;
-  width: 750rpx;
-  background-color: #f7e293;
+  height: 220rpx;
+  background-color: #fffbe6; /* 修改背景颜色 */
   display: flex;
-  // 头像
+  align-items: center;
+  padding: 0 40rpx;
+  box-sizing: border-box;
+  border-radius: 20rpx; /* 添加圆角 */
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.04); /* 添加阴影 */
+  margin: 0 20rpx; /* 添加上左右边距 */
+
   .head {
-    width: 200rpx;
-    height: 200rpx;
-    margin: auto;
-    text-align: center;
+    width: 160rpx;
+    height: 160rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     .head_image {
       width: 120rpx;
       height: 120rpx;
-      line-height: 200rpx;
-      vertical-align: middle;
-      margin: 40rpx auto;
       border-radius: 50%;
       background-color: #fff;
+      box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.08);
+      object-fit: cover;
     }
   }
-  // 姓名电话号
   .phone_name {
     flex: 1;
-    margin: auto;
+    margin-left: 32rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     .name {
+      display: flex;
+      align-items: center;
       .name_text {
-        font-size: 32rpx;
-        opacity: 1;
-        font-family: PingFangSC, PingFangSC-Medium;
-        font-weight: 550;
-        text-align: left;
-        color: #333333;
-        height: 44rpx;
-        line-height: 44rpx;
-        margin-right: 12rpx;
+        font-size: 36rpx;
+        font-weight: 600;
+        color: #333;
+        margin-right: 16rpx;
       }
-
       .name_type {
         width: 32rpx;
         height: 32rpx;
-        vertical-align: middle;
-        margin-bottom: 6rpx;
+        margin-bottom: 4rpx;
       }
     }
     .phone {
+      margin-top: 12rpx;
       .phone_text {
-        height: 40rpx;
-        opacity: 1;
         font-size: 28rpx;
-        font-family: PingFangSC, PingFangSC-Regular;
-        font-weight: 400;
-        text-align: left;
-        color: #333333;
-        line-height: 40rpx;
+        color: #666;
       }
     }
   }
 }
 
 .white_box {
-  margin: 20rpx;
-  background-color: #f7e293;
+  margin: 24rpx 20rpx;
+  background-color: #fffbe6;
   border-radius: 20rpx;
-
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.04);
   .bottom_text {
     display: flex;
     align-items: center;
-    margin: 0 20rpx 0 30rpx;
+    padding: 0 24rpx;
     height: 100rpx;
-    line-height: 100rpx;
+    border-bottom: 1rpx solid #f0e3b0;
+    &:last-child {
+      border-bottom: none;
+    }
     .icon {
-      width: 50rpx;
-      height: 45rpx;
-      padding: 8rpx 20rpx 0 0;
-      vertical-align: middle;
+      width: 48rpx;
+      height: 48rpx;
+      margin-right: 18rpx;
     }
     .text_left {
-      width: 100%;
-      height: 44rpx;
-      opacity: 1;
+      flex: 1;
       font-size: 32rpx;
-      text-align: left;
-      color: #333333;
-      line-height: 44rpx;
-      letter-spacing: 0px;
+      color: #333;
+      font-weight: 500;
     }
     .right_image {
-      width: 30rpx;
-      height: 100%;
-      position: relative;
       .to_right {
-        width: 30rpx;
-        height: 30rpx;
+        width: 28rpx;
+        height: 28rpx;
         vertical-align: middle;
-        margin-bottom: 10rpx;
-        position: absolute;
-        top: 50%;
-        right: 6rpx;
-        transform: translateY(-50%);
       }
     }
   }
 }
 
 .history_content {
-  padding: 0rpx 20rpx 20rpx 20rpx;
+  padding: 0 20rpx 20rpx 20rpx;
   .title {
-    font-size: 28rpx;
+    font-size: 30rpx;
     color: #333;
-    padding-top: 10rpx;
     font-weight: bold;
+    margin: 24rpx 0 12rpx 0;
   }
   .history_item {
-    // display: flex;
-    // justify-content: space-between;
-    height: 300rpx;
-    padding: 40rpx 20rpx;
     background-color: #fff;
-    margin-top: 20rpx;
     border-radius: 20rpx;
+    box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.06);
+    margin-top: 20rpx;
+    padding: 36rpx 24rpx 24rpx 24rpx;
+    transition: box-shadow 0.2s;
+    &:hover {
+      box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.12);
+    }
     .item_info_box {
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
       width: 100%;
       .history_item_left {
+        flex: 1;
         .history_item_order_id {
-          font-size: 30rpx;
-          line-height: 40rpx;
+          font-size: 28rpx;
           color: #333;
-          margin-bottom: 20rpx;
+          margin-bottom: 16rpx;
         }
         .scroll_container {
           width: 400rpx;
-          height: 130rpx;
+          height: 120rpx;
           overflow-x: auto;
           white-space: nowrap;
           .image_box {
             width: 100rpx;
             display: inline-block;
-            align-items: center;
-            margin-right: 20rpx;
-            text-align: center;
+            margin-right: 16rpx;
             image {
-              display: inline-block;
-              border-radius: 10rpx;
+              border-radius: 12rpx;
               width: 100rpx;
               height: 100rpx;
+              box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.06);
+              object-fit: cover;
+              background: #f7e293;
             }
           }
         }
         .history_item_order_time {
-          font-size: 26rpx;
-          color: #666;
+          font-size: 24rpx;
+          color: #999;
+          margin-top: 8rpx;
         }
       }
       .history_item_right {
+        min-width: 180rpx;
         text-align: right;
         .history_item_status {
-          font-size: 30rpx;
+          font-size: 28rpx;
           color: #0af;
-          margin-bottom: 40rpx;
+          margin-bottom: 32rpx;
+          font-weight: 500;
         }
         .history_item_price {
-          font-size: 32rpx;
-          line-height: 50rpx;
+          font-size: 30rpx;
           color: #333;
+          margin-bottom: 8rpx;
         }
         .history_item_dish_amount {
-          font-size: 26rpx;
-          color: #666;
-          margin-bottom: 40rpx;
+          font-size: 24rpx;
+          color: #999;
+          margin-bottom: 32rpx;
         }
       }
     }
     .btn_box {
       width: 100%;
-      display: inline-block;
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16rpx;
+      gap: 16rpx;
       .history_item_reOrder {
-        float: right;
-        margin-left: 20rpx;
-        width: 140rpx;
-        height: 60rpx;
-        text-align: center;
-        line-height: 60rpx;
-        border: #0af solid 1rpx;
-        border-radius: 30rpx;
+        padding: 0 24rpx;
+        height: 56rpx;
+        line-height: 56rpx;
+        border: 2rpx solid #0af;
+        border-radius: 28rpx;
         font-size: 28rpx;
         color: #0af;
+        background: #f7faff;
+        cursor: pointer;
+        transition: background 0.2s;
+        &:active {
+          background: #e6f7ff;
+        }
       }
       .history_item_push_order {
-        float: right;
-        width: 140rpx;
-        height: 62rpx;
-        text-align: center;
-        line-height: 62rpx;
+        padding: 0 24rpx;
+        height: 56rpx;
+        line-height: 56rpx;
         background-color: #0af;
-        border-radius: 30rpx;
+        border-radius: 28rpx;
         font-size: 28rpx;
         color: #fff;
+        cursor: pointer;
+        box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.08);
+        transition: background 0.2s;
+        &:active {
+          background: #0080ff;
+        }
       }
     }
   }
 }
-
-.scroll-view-container {
-  display: flex; /* 横向排列 */
-  white-space: nowrap; /* 横向排列，不换行 */
-  // overflow-x: auto; /* 横向滚动 */
-}
-
-.image-box {
-  display: inline-block; /* 图片盒子横向排列 */
-  margin-right: 10px; /* 图片之间的间距 */
-}
-
-.dish-image {
-  display: inline-block;
-  width: 100px; /* 图片宽度 */
-  height: 100px; /* 图片高度 */
-  object-fit: cover; /* 图片填充方式 */
-}
 </style>
 
-<style>
+<!-- <style>
 page {
   background-color: #f8f8f8;
 }
-</style>
+</style> -->

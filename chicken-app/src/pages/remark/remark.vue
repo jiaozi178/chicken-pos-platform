@@ -1,4 +1,6 @@
 <template>
+  <Navbar title="备注" :show-back="true" />
+
   <view class="uni-textarea">
     <textarea
       class="remark_text"
@@ -16,6 +18,7 @@
 
 <script lang="ts" setup>
 import {ref} from 'vue'
+import Navbar from '@/components/navbar/Navbar.vue'
 
 const remark = ref('')
 

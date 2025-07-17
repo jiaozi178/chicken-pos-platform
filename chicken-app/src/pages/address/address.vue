@@ -1,4 +1,6 @@
 <template>
+  <Navbar title="地址管理" :show-back="true" />
+
   <view class="customer-box">
     <view class="address" :style="{height: `calc(100% - 136rpx - ${statusBarHeight} - 44px - 20rpx)`}">
       <view v-if="addressList && addressList.length > 0" class="address_content">
@@ -66,6 +68,7 @@ import {getAddressListAPI, updateDefaultAddressAPI} from '@/api/address'
 import type {Address} from '@/types/address'
 import {useAddressStore} from '@/stores/modules/address'
 import Empty from '@/components/empty/Empty.vue'
+import Navbar from '@/components/navbar/Navbar.vue';
 
 const store = useAddressStore()
 
@@ -118,12 +121,12 @@ const getLableVal = (item: string) => {
 // 编辑与新增，根据情况跳转不同页面
 const addOrEdit = (type: string, item: any) => {
   if (type === '新增') {
-    uni.redirectTo({
+    uni.navigateTo({
       url: '/pages/addOrEditAddress/addOrEditAddress',
     })
   } else {
     console.log('我要去编辑地址页面！！！  item', item)
-    uni.redirectTo({
+    uni.navigateTo({
       url: '/pages/addOrEditAddress/addOrEditAddress?type=' + '编辑' + '&' + 'id=' + item.id,
     })
   }

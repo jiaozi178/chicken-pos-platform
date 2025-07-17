@@ -1,4 +1,6 @@
 <template>
+  <Navbar title="历史订单" :show-back="true" />
+
   <view class="history_top">
     <view
       v-for="(item, index) in statusOptions"
@@ -23,7 +25,7 @@
           <view class="history_item_order_id">订单号：{{ item.number }}</view>
           <scroll-view class="scroll_container" scroll-x>
             <view v-for="(dish, index) in item.orderDetailList" :key="index" class="image_box">
-              <image :src="dish.pic" />
+              <image :src="getImageUrl(dish.pic ?? '')" />
             </view>
           </scroll-view>
           <view class="history_item_order_time">{{ item.orderTime }}</view>
@@ -53,6 +55,8 @@ import {onLoad, onReachBottom} from '@dcloudio/uni-app'
 import {getOrderPageAPI, reOrderAPI} from '@/api/order'
 import {cleanCartAPI} from '@/api/cart'
 import type {OrderPageDTO, OrderVO} from '@/types/order'
+import { getImageUrl } from '@/utils/imageUrl'
+import Navbar from '@/components/navbar/Navbar.vue'
 
 const childComp: any = ref(null)
 

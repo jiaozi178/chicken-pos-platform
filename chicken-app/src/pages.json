@@ -1,5 +1,4 @@
 {
-	// 组件自动导入
 	"easycom": {
 		"autoscan": true,
 		"custom": {
@@ -7,102 +6,102 @@
 			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
 		}
 	},
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"pages": [ 
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "正新鸡排",
-				"navigationBarTextStyle": "white"
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "正新鸡排"
 			}
 		},
 		{
 			"path": "pages/login/login",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "登录页"
 			}
 		},
 		{
 			"path": "pages/my/my",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "我的"
 			}
 		},
 		{
 			"path": "pages/order/order",
 			"style": {
-				"navigationStyle": "custom", // 隐藏默认导航
+				"navigationStyle": "custom", 
 				"navigationBarTitleText": "点餐"
-				// "app-plus": {
-				// 	"titleNView": {
-				// 		"buttons": [
-				// 			{
-				// 				"fontSrc": "/static/styles/iconfont.ttf",
-				// 				"float": "right",
-				// 				"text": "\ue70c",
-				// 				"color": "#3855FB"
-				// 			}
-				// 		]
-				// 	}
-				// }
 			}
 		},
 		{
 			"path": "pages/detail/detail",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "详情"
 			}
 		},
 		{
 			"path": "pages/submit/submit",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "提交订单"
 			}
 		},
 		{
 			"path": "pages/submit/success",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "提交成功"
 			}
 		},
 		{
 			"path": "pages/address/address",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "地址管理"
 			}
 		},
 		{
 			"path": "pages/addOrEditAddress/addOrEditAddress",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "新增/修改地址"
 			}
 		},
 		{
 			"path": "pages/remark/remark",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "备注"
 			}
 		},
 		{
 			"path": "pages/pay/pay",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "支付订单"
 			}
 		},
 		{
 			"path": "pages/orderDetail/orderDetail",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "订单详情"
 			}
 		},
 		{
 			"path": "pages/history/history",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "历史订单"
 			}
 		},
 		{
 			"path": "pages/updateMy/updateMy",
 			"style": {
+				"navigationStyle": "custom",
 				"navigationBarTitleText": "信息设置"
 			}
 		}

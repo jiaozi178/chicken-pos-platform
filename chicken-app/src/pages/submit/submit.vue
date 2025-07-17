@@ -1,4 +1,6 @@
 <template>
+  <Navbar title="提交订单" :show-back="true" />
+
   <view class="order_content">
     <scroll-view class="order_content_box" scroll-y scroll-top="0rpx">
       <!-- 地址栏 -->
@@ -137,6 +139,7 @@ import type {CartItem} from '@/types/cart'
 import {useAddressStore} from '@/stores/modules/address'
 import {onLoad, onShow} from '@dcloudio/uni-app'
 import {ref} from 'vue'
+import Navbar from '@/components/navbar/Navbar.vue'
 import { getImageUrl } from '@/utils/imageUrl'
 
 // store
@@ -290,14 +293,14 @@ const trans = (item: string) => {
 const goAddress = () => {
   // 记录等下跳转到地址管理后，选好地址要返回当前这个订单页面
   store.addressBackUrl = '/pages/submit/submit'
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/address/address',
   })
 }
 
 // 去备注页面
 const goRemark = () => {
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/remark/remark',
   })
 }

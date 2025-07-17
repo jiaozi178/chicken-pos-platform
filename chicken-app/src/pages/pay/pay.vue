@@ -1,4 +1,6 @@
 <template>
+  <Navbar title="支付订单" :show-back="true" />
+
   <view class="pay_box">
     <view class="time" v-if="countdownStore.showM == 0 && countdownStore.showS == 0">订单已超时</view>
     <view class="time" v-else>
@@ -31,6 +33,7 @@ import {getOrderAPI, payOrderAPI, cancelOrderAPI} from '@/api/order'
 import {onLoad, onShow} from '@dcloudio/uni-app'
 import {useCountdownStore} from '@/stores/modules/countdown'
 import {ref} from 'vue'
+import Navbar from '@/components/navbar/Navbar.vue'
 
 const countdownStore = useCountdownStore()
 

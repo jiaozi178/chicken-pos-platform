@@ -1,4 +1,6 @@
 <template>
+  <Navbar title="登录页" />
+
   <view class="viewport">
     <view class="logo">
       <image src="@/static/images/login.png"></image>
@@ -24,6 +26,7 @@ import {loginAPI} from '@/api/login'
 import {onLoad} from '@dcloudio/uni-app'
 import {useUserStore} from '@/stores/modules/user'
 import type {LoginResult} from '@/types/user'
+import Navbar from '@/components/navbar/Navbar.vue'
 
 // 先调用wx.login()，获取 code 登录凭证
 let code = ''
