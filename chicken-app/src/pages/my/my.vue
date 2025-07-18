@@ -104,7 +104,7 @@
 <script lang="ts" setup>
 import pushMsg from '../../components/message/pushMsg.vue'
 import {ref, reactive} from 'vue'
-import {onLoad, onReachBottom} from '@dcloudio/uni-app'
+import {onLoad, onShow} from '@dcloudio/uni-app'
 import {useUserStore} from '@/stores/modules/user'
 import {getUserInfoAPI} from '@/api/user'
 import {getOrderPageAPI, reOrderAPI, urgeOrderAPI} from '@/api/order'
@@ -157,7 +157,7 @@ const user = reactive({
 const historyOrders = ref<OrderVO[]>([])
 const orderDTO = ref<OrderPageDTO>({
   page: 1,
-  pageSize: 6,
+  pageSize: 10,
 })
 const total = ref(0)
 
@@ -166,6 +166,12 @@ onLoad(async (options) => {
   console.log('userStore', userStore.profile)
   const res = await getUserInfo(user.id)
   // 获取所有订单信息
+  await getOrderPage()
+})
+
+onShow(async () => {
+  console.log('页面 onShow 触发！')
+  await getUserInfo(user.id)
   await getOrderPage()
 })
 
@@ -181,7 +187,7 @@ const getUserInfo = async (id: number) => {
 const getOrderPage = async () => {
   console.log('orderDTO', orderDTO.value)
   const res = await getOrderPageAPI(orderDTO.value)
-  historyOrders.value = historyOrders.value.concat(res.data.records)
+  historyOrders.value = res.data.records
   total.value = res.data.total
 }
 
@@ -203,28 +209,9 @@ const pushOrder = async (id: number) => {
   console.log('催单', id)
   await urgeOrderAPI(id)
   childComp.value.openPopup()
-  // uni.showToast({
-  //   title: '已催单',
-  //   icon: 'none',
-  // })
 }
 
-// 页面上拉触底事件的处理函数
-onReachBottom(() => {
-  console.log('Page:', orderDTO.value.page)
-  console.log('Page Size:', orderDTO.value.pageSize)
-  if (orderDTO.value.page * orderDTO.value.pageSize >= Math.min(total.value, 12)) {
-    console.log('end!')
-    // 达到最近订单展示上限
-    uni.showToast({
-      title: '更多订单信息请到历史订单查看！',
-      icon: 'none',
-    })
-    return
-  }
-  orderDTO.value.page += 1
-  getOrderPage()
-})
+
 
 const toOrderDetail = (id: number) => {
   uni.navigateTo({
