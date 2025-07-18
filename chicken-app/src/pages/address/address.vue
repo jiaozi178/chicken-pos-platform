@@ -17,7 +17,11 @@
             </view>
             <view class="user-info">
               <text class="user-name">{{ item.consignee }}</text>
-              <text class="user-gender">{{ item.gender === 1 ? '先生' : '女士' }}</text>
+              <image
+                class="user-gender-icon"
+                :src="item.gender === 1 ? '../../static/icon/boy.png' : '../../static/icon/girl.png'"
+                alt="性别"
+              />
               <text class="user-phone">{{ item.phone }}</text>
             </view>
           </view>
@@ -238,10 +242,11 @@ const getRadio = async (e: any, item: any) => {
     margin-right: 10rpx;
   }
   
-  .user-gender {
-    font-size: 26rpx;
-    color: #999;
+  .user-gender-icon {
+    width: 32rpx;
+    height: 32rpx;
     margin-right: 20rpx;
+    vertical-align: middle;
   }
   
   .user-phone {
