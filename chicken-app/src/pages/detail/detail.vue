@@ -7,67 +7,72 @@
       <image class="image" :src="getImageUrl(dish.pic)" mode="aspectFill" />
     </view>
     <view class="dishinfo">
-      <view class="name ellipsis">{{ dish.name }}</view>
-      <view class="detail ellipsis">{{ dish.detail }}</view>
-      <view class="price">
-        <text class="symbol">¥</text>
-        <text class="number">{{ dish.price }}</text>
-      </view>
-      <!-- 1、选择规格(口味) -->
-      <image
-        v-if="dish && 'flavors' in dish && dish.flavors.length > 0"
-        class="choosenorm"
-        src="../../static/images/选择规格.png"
-        @tap.stop="chooseNorm(dish as DishItem)"
-        mode="scaleToFill"
-      />
-      <!-- 2、加减菜品 -->
-      <view v-else class="sub_add">
-        <!-- 减菜按钮 -->
-        <image
-          v-if="getCopies(dish) > 0"
-          src="../../static/icon/sub.png"
-          @tap.stop="subDishAction(dish, '菜品')"
-          class="sub"
-        ></image>
-        <!-- 菜品份数 -->
-        <text v-if="getCopies(dish) > 0" class="dish_number">{{ getCopies(dish) }}</text>
-        <!-- 加菜按钮 -->
-        <image src="../../static/icon/add.png" @tap.stop="addDishAction(dish, '菜品')" class="add" />
+      <view class="name">{{ dish.name }}</view>
+      <view class="detail">{{ dish.detail }}</view>
+      <view class="price-container">
+        <view class="price">
+          <text class="symbol">¥</text>
+          <text class="number">{{ dish.price }}</text>
+        </view>
+        <!-- 1、选择规格(口味) -->
+        <view v-if="dish && 'flavors' in dish && dish.flavors.length > 0" class="flavor-btn" @tap.stop="chooseNorm(dish as DishItem)">
+          <text>选择规格</text>
+          <image class="arrow-icon" src="../../static/icon/right-arrow.png" mode="scaleToFill" />
+        </view>
+        <!-- 2、加减菜品 -->
+        <view v-else class="sub_add">
+          <!-- 减菜按钮 -->
+          <image
+            v-if="getCopies(dish) > 0"
+            src="../../static/icon/sub.png"
+            @tap.stop="subDishAction(dish, '菜品')"
+            class="sub"
+          ></image>
+          <!-- 菜品份数 -->
+          <text v-if="getCopies(dish) > 0" class="dish_number">{{ getCopies(dish) }}</text>
+          <!-- 加菜按钮 -->
+          <image src="../../static/icon/add.png" @tap.stop="addDishAction(dish, '菜品')" class="add" />
+        </view>
       </view>
     </view>
   </view>
+
   <!-- 套餐详情，包括该套餐下所有菜品 -->
   <view class="setmeal" v-if="setmeal">
-    <view class="title">套餐详情</view>
+    <view class="setmeal-header">
+      <view class="title">套餐详情</view>
+      <view class="divider"></view>
+    </view>
     <!-- 菜品列表 -->
     <view v-for="item in setmeal.setmealDishes" :key="item.name" class="setmeal_item">
-      <image :src="getImageUrl(item.pic)" />
+      <image class="setmeal-image" :src="getImageUrl(item.pic)" />
       <view class="dishinfo">
-        <view class="name ellipsis">{{ item.name }}</view>
-        <view class="detail ellipsis">{{ item.detail }}</view>
+        <view class="name">{{ item.name }}</view>
+        <view class="detail">{{ item.detail }}</view>
       </view>
     </view>
     <!-- 套餐信息 -->
     <view class="setmeal_info">
-      <view class="detail ellipsis">{{ setmeal.detail }}</view>
-      <view class="price">
-        <text class="symbol">¥</text>
-        <text class="number">{{ setmeal?.price }}</text>
-      </view>
-      <!-- 加减菜品 -->
-      <view class="sub_add">
-        <!-- 减菜按钮 -->
-        <image
-          v-if="getCopies(setmeal) > 0"
-          src="../../static/icon/sub.png"
-          @tap.stop="subDishAction(setmeal, '套餐')"
-          class="sub"
-        ></image>
-        <!-- 菜品份数 -->
-        <text v-if="getCopies(setmeal) > 0" class="dish_number">{{ getCopies(setmeal) }}</text>
-        <!-- 加菜按钮 -->
-        <image src="../../static/icon/add.png" @tap.stop="addDishAction(setmeal, '套餐')" class="add" />
+      <view class="detail">{{ setmeal.detail }}</view>
+      <view class="price-container">
+        <view class="price">
+          <text class="symbol">¥</text>
+          <text class="number">{{ setmeal?.price }}</text>
+        </view>
+        <!-- 加减菜品 -->
+        <view class="sub_add">
+          <!-- 减菜按钮 -->
+          <image
+            v-if="getCopies(setmeal) > 0"
+            src="../../static/icon/sub.png"
+            @tap.stop="subDishAction(setmeal, '套餐')"
+            class="sub"
+          ></image>
+          <!-- 菜品份数 -->
+          <text v-if="getCopies(setmeal) > 0" class="dish_number">{{ getCopies(setmeal) }}</text>
+          <!-- 加菜按钮 -->
+          <image src="../../static/icon/add.png" @tap.stop="addDishAction(setmeal, '套餐')" class="add" />
+        </view>
       </view>
     </view>
   </view>
@@ -397,6 +402,205 @@ const submitOrder = () => {
 </script>
 
 <style lang="less" scoped>
+.dish {
+  background: #fff;
+  border-radius: 16rpx;
+  margin: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  
+  .image-container {
+    width: 100%;
+    height: 400rpx;
+    border-radius: 12rpx;
+    overflow: hidden;
+    margin-bottom: 20rpx;
+    display: flex; // 新增
+    justify-content: center; // 新增
+    align-items: center; // 新增
+    
+    .image {
+      width: 400rpx;
+      height: 400rpx;
+    }
+  }
+  
+  .dishinfo {
+    padding: 0 10rpx;
+    
+    .name {
+      font-size: 32rpx;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10rpx;
+      line-height: 1.4;
+    }
+    
+    .detail {
+      font-size: 26rpx;
+      color: #666;
+      margin-bottom: 20rpx;
+      line-height: 1.5;
+    }
+    
+    .price-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .price {
+        color: #ff4d4f;
+        font-weight: bold;
+        
+        .symbol {
+          font-size: 28rpx;
+        }
+        
+        .number {
+          font-size: 36rpx;
+        }
+      }
+      
+      .flavor-btn {
+        display: flex;
+        align-items: center;
+        padding: 10rpx 20rpx;
+        background: #f5f5f5;
+        border-radius: 30rpx;
+        color: #666;
+        font-size: 26rpx;
+        
+        .arrow-icon {
+          width: 24rpx;
+          height: 24rpx;
+          margin-left: 8rpx;
+        }
+      }
+      
+      .sub_add {
+        display: flex;
+        align-items: center;
+        
+        .sub, .add {
+          width: 50rpx;
+          height: 50rpx;
+        }
+        
+        .dish_number {
+          margin: 0 20rpx;
+          font-size: 30rpx;
+          color: #333;
+          min-width: 30rpx;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+.setmeal {
+  background: #fff;
+  border-radius: 16rpx;
+  margin: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  
+  .setmeal-header {
+    margin-bottom: 20rpx;
+    
+    .title {
+      font-size: 32rpx;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10rpx;
+    }
+    
+    .divider {
+      height: 2rpx;
+      background: #f0f0f0;
+      margin: 10rpx 0;
+    }
+  }
+  
+  .setmeal_item {
+    display: flex;
+    padding: 20rpx 0;
+    border-bottom: 1rpx solid #f5f5f5;
+    
+    .setmeal-image {
+      width: 120rpx;
+      height: 120rpx;
+      border-radius: 8rpx;
+      margin-right: 20rpx;
+    }
+    
+    .dishinfo {
+      flex: 1;
+      
+      .name {
+        font-size: 28rpx;
+        color: #333;
+        margin-bottom: 8rpx;
+      }
+      
+      .detail {
+        font-size: 24rpx;
+        color: #999;
+        line-height: 1.4;
+      }
+    }
+  }
+  
+  .setmeal_info {
+    margin-top: 20rpx;
+    
+    .detail {
+      font-size: 26rpx;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 20rpx;
+    }
+    
+    .price-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .price {
+        color: #ff4d4f;
+        font-weight: bold;
+        
+        .symbol {
+          font-size: 28rpx;
+        }
+        
+        .number {
+          font-size: 36rpx;
+        }
+      }
+      
+      .sub_add {
+        display: flex;
+        align-items: center;
+        
+        .sub, .add {
+          width: 50rpx;
+          height: 50rpx;
+        }
+        
+        .dish_number {
+          margin: 0 20rpx;
+          font-size: 30rpx;
+          color: #333;
+          min-width: 30rpx;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+
 .dialog {
   position: fixed;
   width: 100%;
@@ -474,212 +678,6 @@ const submitOrder = () => {
   height: 100%;
   background-color: #fff;
   justify-content: center;
-}
-
-.dish {
-  .image-container {
-    width: 100%;
-    height: 400rpx;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .image {
-    height: 400rpx;
-    width: 400rpx;
-    object-fit: contain;
-    display: block;
-  }
-
-  .dishinfo {
-    padding: 20rpx;
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    justify-content: space-between;
-    flex: 1;
-
-    .ellipsis {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .name {
-      padding: 5rpx;
-      font-size: 30rpx;
-      color: #222;
-    }
-
-    .detail {
-      padding: 5rpx;
-      font-size: 25rpx;
-      color: #333;
-    }
-
-    .price {
-      padding: 5rpx;
-      font-size: 35rpx;
-      color: #cf4444;
-    }
-
-    .number {
-      font-size: 24rpx;
-      margin-left: 2rpx;
-    }
-
-    .choosenorm {
-      position: absolute;
-      right: 20rpx;
-      bottom: 10rpx;
-      width: 100rpx;
-      height: 40rpx;
-    }
-
-    .sub_add {
-      display: flex;
-      position: absolute;
-      right: 30rpx;
-      bottom: 30rpx;
-
-      .sub {
-        // margin-right: 90rpx;
-        width: 50rpx;
-        height: 50rpx;
-      }
-
-      .add {
-        width: 50rpx;
-        height: 50rpx;
-      }
-
-      .dish_number {
-        padding: 0 10rpx;
-        line-height: 30rpx;
-        font-size: 30rpx;
-        font-family: PingFangSC, PingFangSC-Medium;
-        font-weight: 500;
-      }
-    }
-  }
-
-  image {
-    right: 20rpx;
-    width: 30rpx;
-    height: 30rpx;
-  }
-
-  .choosenorm {
-    right: 20rpx;
-    bottom: 10rpx;
-    width: 100rpx;
-    height: 40rpx;
-  }
-}
-
-.setmeal {
-  margin: 20rpx;
-
-  .setmeal_item {
-    width: 600rpx;
-    margin: 10rpx 30rpx 10rpx 20rpx;
-    background-color: #f6f6f6;
-    display: flex;
-
-    image {
-      width: 150rpx;
-      height: 150rpx;
-    }
-
-    .dishinfo {
-      width: 100rpx;
-      padding: 10rpx;
-      display: flex;
-      position: relative;
-      flex-direction: column;
-      justify-content: space-between;
-      flex: 1;
-
-      .ellipsis {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .name {
-        padding: 5rpx;
-        font-size: 24rpx;
-        color: #222;
-      }
-
-      .detail {
-        padding: 5rpx;
-        font-size: 18rpx;
-        color: #333;
-      }
-    }
-  }
-
-  .setmeal_info {
-    width: 600rpx;
-    height: 100rpx;
-    margin: 50rpx 30rpx 10rpx 20rpx;
-    background-color: #f6f6f6;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-
-    .ellipsis {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .detail {
-      padding: 5rpx;
-      font-size: 25rpx;
-      color: #333;
-    }
-
-    .price {
-      padding: 5rpx;
-      font-size: 18rpx;
-      color: #cf4444;
-
-      .number {
-        font-size: 24rpx;
-        margin-left: 2rpx;
-      }
-    }
-
-    .sub_add {
-      display: flex;
-      position: absolute;
-      right: 30rpx;
-      bottom: 30rpx;
-
-      .sub {
-        // margin-right: 90rpx;
-        width: 50rpx;
-        height: 50rpx;
-      }
-
-      .add {
-        width: 50rpx;
-        height: 50rpx;
-      }
-
-      .dish_number {
-        padding: 0 10rpx;
-        line-height: 30rpx;
-        font-size: 30rpx;
-        font-family: PingFangSC, PingFangSC-Medium;
-        font-weight: 500;
-      }
-    }
-  }
 }
 
 .footer_order_buttom {
@@ -1010,6 +1008,11 @@ const submitOrder = () => {
 }
 </style>
 
+<style>
+page {
+  background: linear-gradient(180deg, #FFF9E6 30%, #f8f9fa 100%);
+}
+</style>
 <!-- const addDishToCart = async (dish: DishItem | SetmealItem) => {
   console.log('addDishToCart', dish)
   // 有可能是套餐或者菜品，先按categoryList遍历，拿到这个菜品对应的分类，获取其sort来判断

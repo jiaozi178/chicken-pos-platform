@@ -80,6 +80,7 @@ public class UserServiceImpl implements UserService {
         // 处理Base64头像图片
         String base64Avatar = userDTO.getPic();
         if (base64Avatar != null && base64Avatar.startsWith("data:image/")) {
+            deleteOldAvatar(userDTO.getId());
             String avatarUrl = saveBase64Avatar(base64Avatar);
             user.setPic(avatarUrl); // 存储相对路径URL
         }
@@ -111,6 +112,25 @@ public class UserServiceImpl implements UserService {
             return "/upload/avatars/" + fileName;
         } catch (Exception e) {
             throw new RuntimeException("头像图片保存失败");
+        }
+    }
+
+    /**
+     * 删除旧头像文件
+     */
+    private void deleteOldAvatar(Integer userId) {
+        try {
+            User oldUser = userMapper.getById(userId);
+            if (oldUser != null && oldUser.getPic() != null && oldUser.getPic().startsWith("/upload/avatars/")) {
+                String oldFilePath = "upload" + oldUser.getPic().replace("/upload/", "/");
+                File oldFile = new File(oldFilePath);
+                if (oldFile.exists()) {
+                    oldFile.delete();
+                }
+            }
+        } catch (Exception e) {
+            // 删除失败不影响主流程
+            System.err.println("删除旧头像失败：" + e.getMessage());
         }
     }
 

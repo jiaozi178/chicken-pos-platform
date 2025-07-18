@@ -1,74 +1,118 @@
 <template>
-  <Navbar title="新增/修改地址" :show-back="true" />
-
-  <view class="customer-box">
-    <view class="add_edit" :style="{height: `calc(100% - ${statusBarHeight} - 44px)`}">
-      <form class="form_address">
-        <view class="uni-form-item uni-column form_item">
-          <view class="title">联系人</view>
+  <Navbar :title="showDel ? '编辑地址' : '新增地址'" :show-back="true" />
+  
+  <view class="add-edit-container" :style="{paddingTop: statusBarHeight()}">
+    <view class="form-container">
+      <form class="address-form">
+        <!-- 联系人 -->
+        <view class="form-item">
+          <text class="form-label">联系人</text>
           <input
-            class="uni-input"
-            placeholder-class="uni-place"
+            class="form-input"
+            placeholder-class="placeholder"
             v-model="form.consignee"
             placeholder="请输入联系人"
             :maxlength="5"
           />
-          <view class="radio">
-            <view class="radio-item" v-for="(item, index) in items" :key="index" @click="sexChangeHandle(item.value)">
-              <image v-if="item.value != form.gender" class="radio-img" src="../../static/icon/icon-radio.png"></image>
-              <image v-else class="radio-img" src="../../static/icon/icon-radio-selected.png"></image>
+          <view class="gender-radio">
+            <view 
+              v-for="(item, index) in items" 
+              :key="index" 
+              class="radio-item"
+              @click="sexChangeHandle(item.value)"
+            >
+              <radio 
+                class="radio-input"
+                color="#FF9C10"
+                :value="String(item.value)"
+                :checked="item.value === form.gender"
+              />
               <text class="radio-label">{{ item.name }}</text>
             </view>
           </view>
         </view>
-        <view class="uni-form-item uni-column form_item">
-          <view class="title">手机号</view>
+        
+        <!-- 手机号 -->
+        <view class="form-item">
+          <text class="form-label">手机号</text>
           <input
-            class="uni-input"
+            class="form-input"
             v-model="form.phone"
             type="number"
-            placeholder-class="uni-place"
+            placeholder-class="placeholder"
             placeholder="请输入手机号"
             :maxlength="11"
           />
         </view>
-        <view class="uni-form-item uni-column form_item">
-          <view class="title">所在地区</view>
+        
+        <!-- 所在地区 -->
+        <view class="form-item">
+          <text class="form-label">所在地区</text>
           <!-- 只有微信小程序端内置了省市区数据 -->
           <!-- #ifdef MP-WEIXIN -->
-          <view class="form-item">
-            <picker @change="pickerChange" mode="region" class="picker" :value="address?.split(' ')">
-              <view v-if="address">{{ address }}</view>
-              <view class="uni-place" v-else>请选择城市</view>
-            </picker>
-          </view>
+          <picker 
+            @change="pickerChange" 
+            mode="region" 
+            class="region-picker"
+            :value="address?.split(' ')"
+          >
+            <view v-if="address" class="picker-value">{{ address }}</view>
+            <view class="placeholder" v-else>请选择城市</view>
+          </picker>
           <!-- #endif -->
         </view>
-        <view class="uni-form-item uni-column form_item">
-          <view class="title">详细地址</view>
+        
+        <!-- 详细地址 -->
+        <view class="form-item">
+          <text class="form-label">详细地址</text>
           <input
-            class="uni-input"
+            class="form-input"
             :class="{'detail-ios': platform == 'ios'}"
-            placeholder-class="uni-place"
+            placeholder-class="placeholder"
             v-model="form.detail"
             placeholder="精确到门牌号"
           />
         </view>
-        <view class="uni-form-item uni-column form_item tag-box">
-          <view class="title">标签:</view>
-          <text
-            :class="{active: form.label === item.name}"
-            class="tag_text"
-            v-for="item in options"
-            :key="item.name"
-            @click="getTextOption(item)"
-            >{{ item.name }}
-          </text>
+        
+        <!-- 标签 -->
+        <view class="form-item tag-item">
+          <text class="form-label">地址标签</text>
+          <view class="tag-options">
+            <view
+              v-for="(item, idx) in options"
+              :key="idx"
+              class="tag-option"
+              :class="{
+                'tag-company': item.name === '公司' && form.label === item.name,
+                'tag-home': item.name === '家' && form.label === item.name,
+                'tag-school': item.name === '学校' && form.label === item.name,
+                'active': form.label === item.name
+              }"
+              @click="getTextOption(item)"
+            >
+              {{ item.name }}
+            </view>
+          </view>
         </view>
       </form>
-      <view class="add_address">
-        <button class="add_btn" @click="addAddress()">保存地址</button>
-        <button v-if="showDel" class="del_btn" type="default" plain @click="deleteAddress()">删除地址</button>
+      
+      <!-- 操作按钮 -->
+      <view class="action-buttons">
+        <button 
+          class="save-btn" 
+          @click="addAddress()"
+        >
+          保存地址
+        </button>
+        <button 
+          v-if="showDel" 
+          class="delete-btn" 
+          type="button" 
+          plain 
+          @click="deleteAddress()"
+        >
+          删除地址
+        </button>
       </view>
     </view>
   </view>
@@ -314,182 +358,163 @@ const deleteAddress = async () => {
 </script>
 
 <style lang="less" scoped>
-.add_edit {
-  width: 750rpx;
-  height: 100%;
-  background-color: #fff;
+.add-edit-container {
+  min-height: 100vh;
+  padding: 20rpx 30rpx;
+  background: linear-gradient(180deg, #FFF9E6 30%, #f8f9fa 100%);
+}
 
-  .form_address {
-    .form_item {
-      margin: 0 22rpx;
-      height: 110rpx;
-      line-height: 110rpx;
-      border-bottom: 1px solid #efefef;
-      display: flex;
+.form-container {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 8rpx 20rpx rgba(255, 156, 16, 0.08);
+}
 
-      .title {
-        width: 140rpx;
-        opacity: 1;
-        font-size: 28rpx;
-        font-family: PingFangSC, PingFangSC-Medium;
-        font-weight: 500;
-        text-align: left;
-        color: #333333;
-        letter-spacing: 0px;
-      }
-
-      .uni-input {
-        flex: 1;
-        height: 110rpx;
-        line-height: 110rpx;
-      }
-
-      /deep/ .uni-place {
-        font-size: 26rpx;
-        font-family: PingFangSC, PingFangSC-Regular;
-        font-weight: 400;
-        color: #999999;
-      }
-
-      .radio {
-        opacity: 1;
-        font-size: 26rpx;
-        font-family: PingFangSC, PingFangSC-Regular;
-        font-weight: 400;
-        text-align: left;
-        color: #333333;
-        letter-spacing: 0px;
-        display: flex;
-        padding-right: 20rpx;
-
-        .radio-item {
-          display: flex;
-          align-items: center;
-
-          &:first-child {
-            margin-right: 54rpx;
-          }
-        }
-
-        .radio-img {
-          width: 32rpx;
-          height: 32rpx;
-          margin-right: 10rpx;
-        }
-      }
-
-      // 标签
-      .tag_text {
-        width: 68rpx;
-        height: 44rpx;
-        line-height: 40rpx;
-        border: 1px solid #e5e4e4;
-        display: inline-block;
-        border-radius: 6rpx;
-        text-align: center;
-        margin-top: 34rpx;
-        box-sizing: border-box;
-        color: #333333;
-        font-size: 24rpx;
-
-        &:nth-child(3) {
-          margin: 34rpx 20rpx;
-        }
-
-        &:nth-child(3) {
-          &.active {
-            background: #fef8e7;
-            border: 1px solid #fef8e7;
-          }
-        }
-
-        &:nth-child(4) {
-          &.active {
-            background: #e7fef8;
-            border: 1px solid #e7fef8;
-          }
-        }
-      }
-
-      .active {
-        background: #e1f1fe;
-        border: 1px solid #e1f1fe;
-      }
-    }
-
-    // 详细地址
-    .detail {
-      padding: 20rpx 22rpx;
-      width: 100%;
-      box-sizing: border-box;
-
-      /deep/ .uni-place {
-        font-size: 26rpx;
-        font-family: PingFangSC, PingFangSC-Regular;
-        font-weight: 400;
-        color: #999999;
-        text-align: left;
-      }
-
-      // color: #999;
-    }
-
-    .detail-ios {
-      padding: 20rpx 14rpx;
-    }
+.form-item {
+  margin-bottom: 40rpx;
+  padding-bottom: 30rpx;
+  border-bottom: 1rpx dashed #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
   }
+}
 
-  // .tag-box {
-  //   // border-top: 1px solid #efefef;
-  // }
+.form-label {
+  display: block;
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
 
-  .add_address {
-    margin: 0 auto;
+.form-input {
+  width: 100%;
+  height: 80rpx;
+  font-size: 28rpx;
+  color: #151515;
+  padding: 0 10rpx;
+  border-radius: 8rpx;
+  background: #f5f5f4eb;
+}
 
-    .add_btn {
-      margin-top: 40rpx;
-      width: 668rpx;
-      height: 72rpx;
-      line-height: 72rpx;
-      border-radius: 36rpx;
-      background: #22ccff;
-      border: 1px solid #22ccff;
-      opacity: 1;
-      font-size: 30rpx;
-      font-family: PingFangSC, PingFangSC-Medium;
-      font-weight: 500;
-      text-align: center;
-      color: #ffffff;
-      letter-spacing: 0px;
+.placeholder {
+  font-size: 26rpx;
+  color: #999;
+}
 
-      .img_btn {
-        width: 44rpx;
-        height: 44rpx;
-        vertical-align: middle;
-        margin-bottom: 8rpx;
-      }
+.gender-radio {
+  display: flex;
+  margin-top: 20rpx;
+  
+  .radio-item {
+    display: flex;
+    align-items: center;
+    margin-right: 40rpx;
+    
+    .radio-input {
+      transform: scale(0.8);
+      margin-right: 8rpx;
     }
-
-    .del_btn {
-      margin-top: 40rpx;
-      opacity: 1;
-      background: #f6f6f6;
-      border: 1px solid #f6f6f6;
-      width: 668rpx;
-      height: 72rpx;
-      line-height: 72rpx;
-      border-radius: 72rpx;
-      font-size: 30rpx;
-      font-family: PingFangSC, PingFangSC-Medium;
-      font-weight: 550;
-      text-align: center;
-      color: #333333;
-      letter-spacing: 0px;
+    
+    .radio-label {
+      font-size: 26rpx;
+      color: #666;
     }
   }
 }
 
-.customer-box {
-  height: 100vh;
+.region-picker {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 28rpx;
+  color: #151515;
+  padding: 0 10rpx;
+  border-radius: 8rpx;
+  background: #f5f5f4eb;
+  
+  .picker-value {
+    color: #333;
+  }
+}
+
+.tag-item {
+  .tag-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20rpx;
+    margin-top: 20rpx;
+  }
+  
+  .tag-option {
+    padding: 10rpx 24rpx;
+    border-radius: 8rpx;
+    font-size: 26rpx;
+    color: #666;
+    background: #f5f5f5;
+    transition: all 0.3s;
+    
+    &.active {
+      color: #fff;
+    }
+    
+    &.tag-company {
+      background: #22A7FF;
+    }
+    
+    &.tag-home {
+      background: #FF6B6B;
+    }
+    
+    &.tag-school {
+      background: #6BCB77;
+    }
+  }
+}
+
+.action-buttons {
+  margin-top: 60rpx;
+  
+  .save-btn {
+    height: 88rpx;
+    line-height: 88rpx;
+    border-radius: 88rpx;
+    background: linear-gradient(to right, #FFB74D, #FF9C10);
+    color: #fff;
+    font-size: 32rpx;
+    font-weight: bold;
+    box-shadow: 0 8rpx 20rpx rgba(255, 156, 16, 0.3);
+    transition: all 0.3s;
+    
+    &:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+  }
+  
+  .delete-btn {
+    height: 88rpx;
+    line-height: 88rpx;
+    border-radius: 88rpx;
+    margin-top: 30rpx;
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #FF6B6B;
+    border: 2rpx solid #FF6B6B;
+    background: #fff;
+    
+    &:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+  }
+}
+
+.detail-ios {
+  padding: 20rpx 14rpx;
 }
 </style>

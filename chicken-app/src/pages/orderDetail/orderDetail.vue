@@ -32,12 +32,12 @@
   <!-- 1、订单菜品列表 -->
   <view class="white_box">
     <view class="word_text">
-      <text class="word_style">寒页餐厅</text>
+      <text class="word_style">正新鸡排</text>
     </view>
     <view class="order-type">
       <view class="type_item" v-for="(obj, index) in order.orderDetailList" :key="index">
         <view class="dish_img">
-          <image mode="aspectFill" :src="getImageUrl(obj.pic)" class="dish_img_url"></image>
+          <image mode="aspectFill" :src="getImageUrl(obj.pic ?? '')" class="dish_img_url"></image>
         </view>
         <view class="dish_info">
           <view class="dish_name"> {{ obj.name }} </view>
@@ -527,6 +527,6 @@ const toPay = async () => {
 
 <style>
 page {
-  background-color: #f8f8f8;
+  background: linear-gradient(180deg, #FFF9E6 30%, #f8f9fa 100%);
 }
 </style>

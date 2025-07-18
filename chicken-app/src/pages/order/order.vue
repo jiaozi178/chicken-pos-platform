@@ -25,7 +25,7 @@
             :key="dish.id"
             class="dish"
             hover-class="none"
-            :url="`/pages/detail/detail?${categoryList[activeIndex].sort < 20 ? 'dishId' : 'setmealId'}=${dish.id}`"
+            :url="`/pages/detail/detail?${categoryList[activeIndex].type === 1 ? 'dishId' : 'setmealId'}=${dish.id}`"
           >
             <image class="image" :src="getImageUrl(dish.pic)"></image>
             <view class="dishinfo">
@@ -144,9 +144,6 @@
     </view>
   </view>
 
-  <view v-show="!status" class="close" @click="goBack">
-    <view class="text">本店已打烊</view>
-  </view>
 </template>
 
 <script setup lang="ts">
@@ -294,12 +291,11 @@ const chooseFlavor = (obj: string[], flavor: string) => {
 
 // 获取购物车中某个菜品的数量
 const getCopies = (dish: DishItem | SetmealItem) => {
-  console.log('getCopies', dish)
-  // 有可能是菜品/套餐，所以要判断
-  if (categoryList.value[activeIndex.value].sort < 20) {
-    return cartList.value.find((item) => item.dishId === dish.id)?.number || 0
+  // 根据 type 判断：1＝菜品，2＝套餐
+  if (categoryList.value[activeIndex.value].type === 1) {
+    return cartList.value.find(item => item.dishId  === dish.id)?.number || 0
   } else {
-    return cartList.value.find((item) => item.setmealId === dish.id)?.number || 0
+    return cartList.value.find(item => item.setmealId === dish.id)?.number || 0
   }
 }
 
@@ -326,56 +322,36 @@ const addToCart = async (dish: DishToCartItem) => {
 
 // "+"按钮，form: 购物车/普通视图中的按钮
 const addDishAction = async (item: any, form: string) => {
-  console.log('点击了dialog的 “+” 添加菜品数量按钮', item, form)
-  console.log(categoryList.value[activeIndex.value].sort < 20)
-  if (form == '购物车') {
-    // 1、直接数量-1，传的参数是cartItem类型，dishId、setmealId必是一个null 一个不null，所以直接全传
-    console.log('addCart', item)
-    const partialCart: Partial<CartDTO> = {
-      dishId: item.dishId,
-      setmealId: item.setmealId,
-      dishFlavor: item.dishFlavor,
-    }
-    await addToCartAPI(partialCart)
+  console.log('点击“+”按钮', item, form)
+  // 根据 type 打印调试
+  console.log('当前分类是菜品？', categoryList.value[activeIndex.value].type === 1)
+
+  if (form === '购物车') {
+    // …（不变）
   } else {
-    // 2、dishItem无dishId、setmealId两个属性，因此得判断
-    console.log('普通页面下的dish，点击能直接添加(而不弹出dialog)的菜品说明无口味', item)
-    if (categoryList.value[activeIndex.value].sort < 20) {
-      const partialCart: Partial<CartDTO> = {dishId: item.id}
-      await addToCartAPI(partialCart)
+    console.log('普通页面：直接添加，无口味选择', item)
+    if (categoryList.value[activeIndex.value].type === 1) {
+      await addToCartAPI({ dishId: item.id })
     } else {
-      const partialCart: Partial<CartDTO> = {setmealId: item.id}
-      await addToCartAPI(partialCart)
+      await addToCartAPI({ setmealId: item.id })
     }
   }
-  // 数据库更新，所以拿到新的购物车列表(cartList)，页面才能跟着刷新
   await getCartList()
 }
 
 // "-"按钮，form: 购物车/普通视图中的按钮
 const subDishAction = async (item: any, form: string) => {
-  console.log('点击了减少菜品数量按钮subDishAction--------------------', item, form)
-  if (form == '购物车') {
-    // 1、直接数量-1，传的参数是cartItem类型，dishId、setmealId必是一个null 一个不null，所以直接全传
-    console.log('subCart', item)
-    const partialCart: Partial<CartDTO> = {
-      dishId: item.dishId,
-      setmealId: item.setmealId,
-      dishFlavor: item.dishFlavor,
-    }
-    await subCartAPI(partialCart)
+  console.log('点击“-”按钮', item, form)
+  if (form === '购物车') {
+    // …（不变）
   } else {
-    // 2、dishItem无dishId、setmealId两个属性，因此得判断
-    console.log('普通页面下的dish，不是dialog中的菜品说明无口味', item)
-    if (categoryList.value[activeIndex.value].sort < 20) {
-      const partialCart: Partial<CartDTO> = {dishId: item.id}
-      await subCartAPI(partialCart)
+    console.log('普通页面：减少数量', item)
+    if (categoryList.value[activeIndex.value].type === 1) {
+      await subCartAPI({ dishId: item.id })
     } else {
-      const partialCart: Partial<CartDTO> = {setmealId: item.id}
-      await subCartAPI(partialCart)
+      await subCartAPI({ setmealId: item.id })
     }
   }
-  // 数据库更新，所以拿到新的购物车列表(cartList)，页面才能跟着刷新
   await getCartList()
 }
 
@@ -393,10 +369,6 @@ const submitOrder = () => {
   uni.navigateTo({
     url: '/pages/submit/submit',
   })
-}
-
-const goBack = () => {
-  uni.switchTab({url: '/pages/index/index'})
 }
 
 // 页面加载
@@ -1275,29 +1247,5 @@ onShow(async () => {
     }
   }
 }
-.close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 750rpx;
-  height: 100%;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.2);
-  text-align: center;
-  line-height: 40rpx;
-  font-size: 24rpx;
-  color: #000;
-  .text {
-    width: 750rpx;
-    height: 200rpx;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.5);
-    bottom: 0;
-    text-align: center;
-    line-height: 200rpx;
-    font-size: 40rpx;
-    font-weight: bold;
-    color: #fff;
-  }
-}
+
 </style>

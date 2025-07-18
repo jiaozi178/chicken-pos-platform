@@ -1,66 +1,74 @@
 <template>
   <Navbar title="地址管理" :show-back="true" />
-
-  <view class="customer-box">
-    <view class="address" :style="{height: `calc(100% - 136rpx - ${statusBarHeight} - 44px - 20rpx)`}">
-      <view v-if="addressList && addressList.length > 0" class="address_content">
-        <!-- address列表 -->
-        <view class="address_liests" v-for="(item, index) in addressList" :key="index">
-          <!-- 上部 -->
-          <view class="list_item_top" @click="choseAddress(index, item)">
-            <!-- 左边 -->
-            <view class="item_left">
-              <!-- 地址 -->
-              <view class="details">
-                <text class="tag" :class="'tag' + trans(item.label as string)">{{
-                  getLableVal(item.label as string)
-                }}</text>
-                <text class="address_word"
-                  >{{ item.provinceName }}{{ item.cityName }}{{ item.districtName }}{{ item.detail }}</text
-                >
-              </view>
-              <!-- 性别及手机号 -->
-              <view class="sale">
-                <text class="name">{{ item.gender === 1 ? item.consignee + ' 男士' : item.consignee + ' 女士' }}</text>
-                <text class="num">{{ item.phone }}</text>
-              </view>
+  
+  <view class="address-container" :style="{paddingTop: statusBarHeight}">
+    <!-- 地址列表 -->
+    <view v-if="addressList && addressList.length > 0" class="address-list">
+      <view 
+        v-for="(item, index) in addressList" 
+        :key="index" 
+        class="address-card"
+        :class="{'default-card': item.isDefault === 1}"
+      >
+        <view class="card-content" @click="choseAddress(index, item)">
+          <view class="card-header">
+            <view class="address-tag" :class="`tag-${trans(item.label as string)}`">
+              {{ getLableVal(item.label as string) }}
             </view>
-            <!-- 右边 -->
-            <view class="item_right">
-              <image @click.stop="addOrEdit('编辑', item)" class="edit" src="../../static/icon/edit.png"></image>
+            <view class="user-info">
+              <text class="user-name">{{ item.consignee }}</text>
+              <image
+                class="user-gender-icon"
+                :src="item.gender === 1 ? '../../static/icon/boy.png' : '../../static/icon/girl.png'"
+                alt="性别"
+              />
+              <text class="user-phone">{{ item.phone }}</text>
             </view>
           </view>
-          <!-- 下部 -->
-          <view class="list_item_bottom">
-            <!-- :checked="Number(item.id) === current" -->
-            <label class="radio" @click.stop="getRadio(index, item)">
-              <radio
-                class="item_radio"
-                v-if="testValue"
-                color="#22ccff"
-                :value="String(item.id)"
-                :checked="item.isDefault === 1"
-                @click.stop="getRadio(index, item)"
-              />设为默认地址
-            </label>
+          
+          <view class="address-detail">
+            <text class="address-text">
+              {{ item.provinceName }}{{ item.cityName }}{{ item.districtName }}{{ item.detail }}
+            </text>
+          </view>
+          
+          <view class="card-footer">
+            <view class="default-label" v-if="item.isDefault === 1">
+              <text>默认地址</text>
+            </view>
           </view>
         </view>
-        <!-- 无地址展示 -->
-        <!-- <view v-if="addressList.length === 0" class="no_address">
-          <text class="no_word">暂无地址</text>
-        </view> -->
+        
+        <view class="card-actions">
+          <view class="set-default" @click.stop="getRadio(index, item)">
+            <radio 
+              class="default-radio"
+              color="#FF9C10"
+              :value="String(item.id)"
+              :checked="item.isDefault === 1"
+            />
+            <text>设为默认</text>
+          </view>
+          
+          <view class="edit-btn" @click.stop="addOrEdit('编辑', item)">
+            <image class="edit-icon" src="../../static/icon/edit2.png"></image>
+            <text>编辑</text>
+          </view>
+        </view>
       </view>
-      <Empty v-else boxHeight="100%" textLabel="暂无地址"></Empty>
-      <view class="add_address">
-        <button class="add_btn" type="primary" :plain="true" @click="addOrEdit('新增', 0)">
-          <!-- <image class="img_btn" src="../../static/add.png"></image> -->
-          <text class="add-icon">+</text>
-          添加收货地址
-        </button>
-      </view>
+    </view>
+    
+    <Empty v-else boxHeight="100%" textLabel="暂无地址" />
+    
+    <!-- 添加地址按钮 -->
+    <view class="add-address-btn">
+      <button class="add-btn" @click="addOrEdit('新增', 0)">
+        添加收货地址
+      </button>
     </view>
   </view>
 </template>
+
 
 <script lang="ts" setup>
 import {ref, onMounted, computed} from 'vue'
@@ -88,13 +96,6 @@ const getAddressList = async () => {
     testValue.value = true
     addressList.value = res.data
   }
-}
-
-const goBack = () => {
-  console.log('this.addressBackUrl', addressBackUrl)
-  uni.redirectTo({
-    url: addressBackUrl,
-  })
 }
 
 // 标签文字转数字
@@ -161,222 +162,200 @@ const getRadio = async (e: any, item: any) => {
 </script>
 
 <style lang="less" scoped>
-.address {
-  width: 750rpx;
+.address-container {
+  min-height: 100vh;
+  padding: 20rpx 30rpx 120rpx;
+}
 
-  // height: calc(100% - 160rpx);
-  .address_content {
-    margin: 0 20rpx;
-    padding-bottom: 20rpx;
-    height: 100%;
-    overflow-y: auto;
+.address-list {
+  margin-top: 20rpx;
+}
 
-    // background: #f6f6f6;
-    .address_liests {
-      width: 100%;
-      height: 256rpx;
-      opacity: 1;
-      background: #ffffff;
-      border-radius: 12rpx;
-      display: flex;
-      display: flex;
-      flex-direction: column;
-      margin-top: 20rpx;
-      padding: 0 28rpx 0 12rpx;
-      box-sizing: border-box;
-
-      // 上部
-      .list_item_top {
-        flex: 1;
-        width: 100%;
-        height: 100%;
-        display: flex;
-
-        // 左边
-        .item_left {
-          flex: 1;
-          overflow: hidden;
-          margin-left: 12rpx;
-
-          // 地址
-          .details {
-            // margin-left: 24rpx;
-            margin-top: 42rpx;
-            display: flex;
-            height: 40rpx;
-            line-height: 40rpx;
-
-            // 标签
-            .tag {
-              width: 68rpx;
-              height: 40rpx;
-              line-height: 40rpx;
-              text-align: center;
-              border-radius: 4rpx;
-              background: #e1f1fe;
-              display: inline-block;
-              margin-right: 8rpx;
-              color: #333333;
-              font-size: 24rpx;
-              font-family: PingFangSC, PingFangSC-Regular;
-              font-weight: 400;
-            }
-
-            .tag2 {
-              background: #fef8e7;
-            }
-
-            .tag3 {
-              background: #e7fef8;
-            }
-
-            .tag4 {
-              background: #fee7e7;
-            }
-
-            // 地址描述
-            .address_word {
-              flex: 1;
-              font-size: 28rpx;
-              font-family: PingFangSC, PingFangSC-Regular;
-              font-weight: 400;
-              text-align: left;
-              color: #333333;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-            }
-
-            // 不同标签展示不同背景色
-            .active {
-              background: #fef8e7;
-            }
-          }
-
-          // 姓名及手机号
-          .sale {
-            margin-top: 20rpx;
-
-            .name,
-            .num {
-              height: 40rpx;
-              opacity: 1;
-              font-size: 28rpx;
-              font-family: PingFangSC, PingFangSC-Regular;
-              font-weight: 400;
-              text-align: left;
-              color: #999999;
-              line-height: 40rpx;
-              letter-spacing: 0px;
-            }
-
-            .num {
-              margin-left: 20rpx;
-              // margin-top: 10rpx;
-            }
-          }
-        }
-
-        // 右边--编辑
-        .item_right {
-          width: 100rpx;
-          height: 100%;
-          line-height: 1;
-          text-align: right;
-          padding-right: 18rpx;
-
-          .edit {
-            width: 32rpx;
-            height: 32rpx;
-            margin-top: 80rpx;
-            margin-left: 20rpx;
-          }
-        }
-      }
-
-      // 下部
-      .list_item_bottom {
-        height: 80rpx;
-        line-height: 80rpx;
-        border-top: 1px solid #efefef;
-
-        .radio {
-          margin-left: 8rpx;
-          opacity: 1;
-          font-size: 26rpx;
-          font-family: PingFangSC, PingFangSC-Regular;
-          font-weight: 400;
-          text-align: left;
-          color: #333333;
-
-          .item_radio {
-            transform: scale(0.7);
-          }
-        }
-      }
-    }
-
-    // 暂无地址
-    .no_address {
-      // width: 730rpx;
-      margin: 0 auto;
-      height: 50rpx;
-
-      .no_word {
-        display: block;
-        text-align: center;
-        font-size: 32rpx;
-      }
+.address-card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 20rpx rgba(255, 156, 16, 0.08);
+  margin-bottom: 30rpx;
+  overflow: hidden;
+  transition: all 0.3s;
+  
+  &:active {
+    transform: translateY(-4rpx);
+    box-shadow: 0 12rpx 30rpx rgba(255, 156, 16, 0.15);
+  }
+  
+  &.default-card {
+    border: 2rpx solid #FF9C10;
+    position: relative;
+    overflow: visible;
+    
+    &::before {
+      content: '默认';
+      position: absolute;
+      top: -10rpx;
+      right: 20rpx;
+      background: #FF9C10;
+      color: #fff;
+      font-size: 22rpx;
+      padding: 4rpx 16rpx;
+      border-radius: 0 0 10rpx 10rpx;
+      z-index: 2;
     }
   }
+}
 
-  .add_address {
-    position: fixed;
-    bottom: 0rpx;
-    left: 0;
-    margin: 0 auto;
-    background: #ffffff;
-    height: 136rpx;
+.card-content {
+  padding: 30rpx 30rpx 20rpx;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.address-tag {
+  height: 40rpx;
+  padding: 0 16rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-right: 20rpx;
+  
+  &.tag-1 { background: #22A7FF; } /* 公司 - 蓝色 */
+  &.tag-2 { background: #FF6B6B; } /* 家 - 红色 */
+  &.tag-3 { background: #6BCB77; } /* 学校 - 绿色 */
+  &.tag-4 { background: #FF9C10; } /* 其他 - 橙色 */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  
+  .user-name {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+    margin-right: 10rpx;
+  }
+  
+  .user-gender-icon {
+    width: 32rpx;
+    height: 32rpx;
+    margin-right: 20rpx;
+    vertical-align: middle;
+  }
+  
+  .user-phone {
+    font-size: 28rpx;
+    color: #666;
+  }
+}
+
+.address-detail {
+  padding-left: 10rpx;
+  margin-bottom: 24rpx;
+  
+  .address-text {
+    font-size: 28rpx;
+    color: #666;
+    line-height: 1.6;
+  }
+}
+
+.card-footer {
+  padding-top: 20rpx;
+  border-top: 1rpx dashed #f0f0f0;
+  
+  .default-label {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 750rpx;
-
-    .add_btn {
-      width: 668rpx;
-      height: 72rpx;
-      line-height: 72rpx;
-      border-radius: 72rpx;
-      background: #22ccff;
-      border: 1px solid #22ccff;
-      opacity: 1;
-      font-size: 30rpx;
-      font-family: PingFangSC, PingFangSC-Medium;
-      font-weight: 500;
-      text-align: center;
-      color: #ffffff;
-      letter-spacing: 0px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      .add-icon {
-        font-size: 32rpx;
-        margin-right: 8rpx;
-        margin-bottom: 4rpx;
-      }
-
-      .img_btn {
-        width: 44rpx;
-        height: 44rpx;
-        vertical-align: middle;
-        margin-bottom: 8rpx;
-      }
+    font-size: 26rpx;
+    color: #FF9C10;
+    
+    .default-icon {
+      width: 28rpx;
+      height: 28rpx;
+      margin-right: 8rpx;
     }
   }
 }
 
-.customer-box {
-  height: 100vh;
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background: #FFFCF5;
+  border-top: 1rpx solid #f8f8f8;
+  
+  .set-default {
+    display: flex;
+    align-items: center;
+    font-size: 26rpx;
+    color: #666;
+    
+    .default-radio {
+      transform: scale(0.8);
+      margin-right: 6rpx;
+    }
+  }
+  
+  .edit-btn {
+    display: flex;
+    align-items: center;
+    font-size: 26rpx;
+    color: #FF9C10;
+    
+    .edit-icon {
+      color: #FF9C10;
+      width: 30rpx;
+      height: 30rpx;
+      margin-right: 8rpx;
+    }
+  }
+}
+
+.add-address-btn {
+  position: fixed;
+  bottom: 40rpx;
+  left: 30rpx;
+  right: 30rpx;
+  
+  .add-btn {
+    height: 88rpx;
+    line-height: 88rpx;
+    border-radius: 88rpx;
+    background: linear-gradient(to right, #FFB74D, #FF9C10);
+    color: #fff;
+    font-size: 32rpx;
+    font-weight: bold;
+    box-shadow: 0 8rpx 20rpx rgba(255, 156, 16, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    
+    &:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+    
+    .add-icon {
+      width: 36rpx;
+      height: 36rpx;
+      margin-right: 12rpx;
+    }
+  }
 }
 </style>
+
+<style>
+page {
+  background: linear-gradient(180deg, #FFF9E6 30%, #f8f9fa 100%);
+}
+</style>
+

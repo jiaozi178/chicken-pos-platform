@@ -410,7 +410,6 @@ const payOrderHandle = async () => {
   justify-content: center;
   padding: 20rpx 0 0 0;
   position: relative;
-  background-color: #cceeff;
   .order_content_box {
     width: 100%;
     height: 100%;
@@ -500,19 +499,17 @@ const payOrderHandle = async () => {
             line-height: 45rpx;
             color: #333333;
             text-align: center;
-            background: #e1f1fe;
+            background: #22A7FF;
           }
 
           .tag2 {
-            background: #fef8e7;
+            background: #FF6B6B; /* 家 - 红色 */
           }
-
           .tag3 {
-            background: #e7fef8;
+            background: #6BCB77; /* 学校 - 绿色 */
           }
-
           .tag4 {
-            background: #fee7e7;
+            background: #FF9C10; /* 其他 - 橙色 */
           }
           .word {
             vertical-align: middle;
@@ -912,7 +909,7 @@ const payOrderHandle = async () => {
         // margin-top: 20rpx;
         width: 600rpx;
         margin: 20rpx auto;
-        background-color: #fea;
+        background-color: rgb(252, 244, 214);
         border-radius: 10rpx 10rpx 30rpx 30rpx;
         .after_action {
           // height: 200rpx;
@@ -932,7 +929,7 @@ const payOrderHandle = async () => {
             height: 80rpx;
             line-height: 80rpx;
             border-radius: 40rpx;
-            background: #00aaff;
+            background: linear-gradient(to right, #FFB74D, #FF9C10);
             color: #fff;
             font-size: 30rpx;
             text-align: center;
@@ -1176,5 +1173,11 @@ const payOrderHandle = async () => {
     height: 160rpx;
     border-radius: 100%;
   }
+}
+</style>
+
+<style>
+page {
+  background: linear-gradient(180deg, #FFF9E6 30%, #f8f9fa 100%);
 }
 </style>
