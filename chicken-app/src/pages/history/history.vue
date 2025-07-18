@@ -1,49 +1,62 @@
 <template>
   <Navbar title="历史订单" :show-back="true" />
 
-  <view class="history_top">
-    <view
-      v-for="(item, index) in statusOptions"
-      :key="index"
-      class="history_title"
-      :class="{active: index === activeIndex}"
-      @tap="getOrderPage(index, '更改状态')"
-    >
-      <text class="name"> {{ item.name }} </text>
+  <view class="history-container">
+    <!-- 状态筛选栏 -->
+    <view class="status-filter">
+      <view
+        v-for="(item, index) in statusOptions"
+        :key="index"
+        class="filter-item"
+        :class="{active: index === activeIndex}"
+        @tap="getOrderPage(index, '更改状态')"
+      >
+        <text class="filter-text">{{ item.name }}</text>
+        <view v-if="index === activeIndex" class="active-indicator"></view>
+      </view>
     </view>
-  </view>
-  <view class="blank"></view>
-  <view class="history_content">
-    <view
-      class="history_item"
-      v-for="(item, index) in historyOrders"
-      :key="index"
-      @click="toOrderDetail(item.id as number)"
-    >
-      <view class="item_info_box">
-        <view class="history_item_left">
-          <view class="history_item_order_id">订单号：{{ item.number }}</view>
-          <scroll-view class="scroll_container" scroll-x>
-            <view v-for="(dish, index) in item.orderDetailList" :key="index" class="image_box">
+    
+    <!-- 订单列表 -->
+    <view class="order-list">
+      <view
+        class="order-item"
+        v-for="(item, index) in historyOrders"
+        :key="index"
+        @click="toOrderDetail(item.id as number)"
+      >
+        <view class="item-header">
+          <text class="order-number">订单号：{{ item.number }}</text>
+          <text class="order-status" :class="`status-${item.status}`">
+            {{ statusList[item.status as number].name }}
+          </text>
+        </view>
+        
+        <view class="item-body">
+          <scroll-view class="scroll-container" scroll-x>
+            <view v-for="(dish, index) in item.orderDetailList" :key="index" class="dish-image">
               <image :src="getImageUrl(dish.pic ?? '')" />
             </view>
           </scroll-view>
-          <view class="history_item_order_time">{{ item.orderTime }}</view>
+          
+          <view class="order-info">
+            <view class="order-time">
+              <image class="time-icon" src="../../static/icon/time.png"></image>
+              {{ item.orderTime }}
+            </view>
+            <view class="order-price">￥{{ item.amount }}</view>
+          </view>
         </view>
-        <view class="history_item_right">
-          <view class="history_item_status">{{ statusList[item.status as number].name }}</view>
-          <view class="history_item_price">￥{{ item.amount }}</view>
-          <view class="history_item_dish_amount">共{{ item.packAmount }}份</view>
-        </view>
-      </view>
-      <view class="btn_box">
-        <view class="history_item_reOrder" @click.stop="reOrder(item.id as number)">再来一单</view>
-        <view class="history_item_push_order" v-if="item.status === 2" @click.stop="pushOrder(item.id as number)">
-          催单
+        
+        <view class="item-footer">
+          <view class="btn reorder" @click.stop="reOrder(item.id as number)">再来一单</view>
+          <view class="btn urge" v-if="item.status === 2" @click.stop="pushOrder(item.id as number)">
+            催单
+          </view>
         </view>
       </view>
     </view>
   </view>
+  
   <!-- 催单massageBox -->
   <pushMsg ref="childComp"></pushMsg>
 </template>
@@ -193,131 +206,198 @@ const pushOrder = (id: number) => {
 </script>
 
 <style lang="less" scoped>
-.history_top {
-  position: fixed;
-  width: 100%;
-  height: 80rpx;
+.history-container {
+  min-height: 100vh;
+  padding: 20rpx 30rpx;
+  background: linear-gradient(180deg, #FFF9E6 30%, #f8f9fa 100%);
+}
+
+.status-filter {
   display: flex;
   justify-content: space-around;
-  padding-top: 20rpx;
-  background-color: #fff;
-  .history_title {
-    width: 25%;
-    text-align: center;
-    font-size: 30rpx;
-    color: #333;
-  }
-  .active {
-    color: #00aaff;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 20rpx 0;
+  margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.03);
+  
+  .filter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 0 20rpx;
+    
+    .filter-text {
+      font-size: 30rpx;
+      color: #666;
+      transition: all 0.3s;
+    }
+    
+    .active-indicator {
+      position: absolute;
+      bottom: -10rpx;
+      width: 40rpx;
+      height: 6rpx;
+      background: #FF9C10;
+      border-radius: 3rpx;
+      transition: all 0.3s;
+    }
+    
+    &.active {
+      .filter-text {
+        color: #FF9C10;
+        font-weight: bold;
+      }
+    }
   }
 }
-.blank {
-  height: 100rpx;
-}
-.history_content {
-  padding: 0rpx 20rpx 20rpx 20rpx;
-  .title {
-    font-size: 28rpx;
-    color: #333;
-    padding-top: 10rpx;
-    font-weight: bold;
-  }
-  .history_item {
-    // display: flex;
-    // justify-content: space-between;
-    height: 300rpx;
-    padding: 40rpx 20rpx;
+
+.order-list {
+  .order-item {
     background-color: #fff;
-    margin-top: 20rpx;
-    border-radius: 20rpx;
-    .item_info_box {
+    border-radius: 24rpx;
+    overflow: hidden;
+    margin-bottom: 30rpx;
+    box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.03);
+    transition: all 0.3s;
+    
+    &:active {
+      transform: translateY(-4rpx);
+      box-shadow: 0 10rpx 25rpx rgba(0, 0, 0, 0.08);
+    }
+    
+    .item-header {
       display: flex;
       justify-content: space-between;
-      width: 100%;
-      .history_item_left {
-        .history_item_order_id {
-          font-size: 30rpx;
-          line-height: 40rpx;
-          color: #333;
-          margin-bottom: 20rpx;
-        }
-        .scroll_container {
-          width: 400rpx;
-          height: 130rpx;
-          overflow-x: auto;
-          white-space: nowrap;
-          .image_box {
-            width: 100rpx;
-            display: inline-block;
-            align-items: center;
-            margin-right: 20rpx;
-            text-align: center;
-            image {
-              display: inline-block;
-              border-radius: 10rpx;
-              width: 100rpx;
-              height: 100rpx;
-            }
-          }
-        }
-        .history_item_order_time {
-          font-size: 26rpx;
-          color: #666;
-        }
+      align-items: center;
+      padding: 24rpx 30rpx;
+      background: #fafafa;
+      border-bottom: 1rpx solid #f0f0f0;
+      
+      .order-number {
+        font-size: 26rpx;
+        color: #666;
       }
-      .history_item_right {
-        text-align: right;
-        .history_item_status {
-          font-size: 30rpx;
-          color: #0af;
-          margin-bottom: 40rpx;
+      
+      .order-status {
+        font-size: 26rpx;
+        font-weight: 500;
+        padding: 6rpx 16rpx;
+        border-radius: 30rpx;
+        
+        &.status-1 { /* 待付款 */
+          background: #fff2f0;
+          color: #ff4d4f;
         }
-        .history_item_price {
-          font-size: 32rpx;
-          line-height: 50rpx;
-          color: #333;
+        &.status-2 { /* 待接单 */
+          background: #e6f7ff;
+          color: #1890ff;
         }
-        .history_item_dish_amount {
-          font-size: 26rpx;
-          color: #666;
-          margin-bottom: 40rpx;
+        &.status-3, &.status-4 { /* 已接单/派送中 */
+          background: #fff7e6;
+          color: #fa8c16;
+        }
+        &.status-5 { /* 已完成 */
+          background: #f6ffed;
+          color: #52c41a;
+        }
+        &.status-6 { /* 已取消 */
+          background: #f9f9f9;
+          color: #999;
         }
       }
     }
-    .btn_box {
-      width: 100%;
-      display: inline-block;
-      .history_item_reOrder {
-        float: right;
-        margin-left: 20rpx;
-        width: 140rpx;
-        height: 60rpx;
-        text-align: center;
-        line-height: 60rpx;
-        border: #0af solid 1rpx;
-        border-radius: 30rpx;
-        font-size: 28rpx;
-        color: #0af;
+    
+    .item-body {
+      padding: 30rpx;
+      
+      .scroll-container {
+        width: 100%;
+        height: 120rpx;
+        margin-bottom: 30rpx;
+        
+        .dish-image {
+          width: 120rpx;
+          height: 120rpx;
+          display: inline-block;
+          margin-right: 20rpx;
+          border-radius: 16rpx;
+          overflow: hidden;
+          box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+          
+          image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
       }
-      .history_item_push_order {
-        float: right;
-        width: 140rpx;
-        height: 62rpx;
-        text-align: center;
-        line-height: 62rpx;
-        background-color: #0af;
-        border-radius: 30rpx;
+      
+      .order-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1rpx dashed #eee;
+        padding-top: 24rpx;
+        
+        .order-time {
+          display: flex;
+          align-items: center;
+          font-size: 26rpx;
+          color: #999;
+          
+          .time-icon {
+            width: 28rpx;
+            height: 28rpx;
+            margin-right: 10rpx;
+          }
+        }
+        
+        .order-price {
+          font-size: 32rpx;
+          font-weight: bold;
+          color: #FF9C10;
+        }
+      }
+    }
+    
+    .item-footer {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0 30rpx 30rpx;
+      gap: 20rpx;
+      
+      .btn {
+        height: 64rpx;
+        line-height: 64rpx;
+        padding: 0 36rpx;
+        border-radius: 40rpx;
         font-size: 28rpx;
-        color: #fff;
+        font-weight: 500;
+        transition: all 0.3s;
+        
+        &.reorder {
+          background: #fff;
+          border: 1rpx solid #FF9C10;
+          color: #FF9C10;
+          
+          &:active {
+            background: #fff8e6;
+          }
+        }
+        
+        &.urge {
+          background: #FF9C10;
+          color: #fff;
+          box-shadow: 0 4rpx 12rpx rgba(255, 156, 16, 0.3);
+          
+          &:active {
+            background: #e68c0e;
+          }
+        }
       }
     }
   }
-}
-</style>
-
-<style>
-page {
-  /* width: 700rpx; */
-  background-color: #eeeeee;
 }
 </style>
