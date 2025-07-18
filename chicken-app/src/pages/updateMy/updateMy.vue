@@ -1,29 +1,76 @@
 <template>
   <Navbar title="修改信息" :show-back="true" />
-  <!-- 信息input框列表 -->
-  <view class="submit">
-    <form @submit="submit">
-      <view class="pic_box" @click="picChange">
-        <image v-if="!user.pic" src="../../static/images/user_default.png" mode="aspectFill"></image>
-        <image v-else :src="getImageUrl(user.pic)" mode="aspectFill"></image>
-        <view class="text">点击上传头像</view>
+  
+  <view class="update-container">
+    <form @submit="submit" class="update-form">
+      <!-- 头像上传 -->
+      <view class="avatar-upload" @click="picChange">
+        <view class="avatar-container">
+          <image 
+            v-if="!user.pic" 
+            class="avatar-image" 
+            src="../../static/images/user_default.png" 
+            mode="aspectFill"
+          />
+          <image 
+            v-else 
+            class="avatar-image" 
+            :src="getImageUrl(user.pic)" 
+            mode="aspectFill"
+          />
+        </view>
+        <text class="upload-text">点击更换头像</text>
       </view>
-      <view class="radio">
-        <view class="radio-item" v-for="(item, index) in items" :key="index" @click="genderChange(item.value)">
-          <image v-if="item.value != user.gender" class="radio-img" src="../../static/icon/icon-radio.png"></image>
-          <image v-else class="radio-img" src="../../static/icon/icon-radio-selected.png"></image>
-          <text class="radio-label">{{ item.name }}</text>
+      
+      <!-- 性别选择 -->
+      <view class="form-section gender-section">
+        <text class="section-title">性别</text>
+        <view class="gender-options">
+          <view 
+            v-for="(item, index) in items" 
+            :key="index" 
+            class="gender-option"
+            :class="{active: item.value === user.gender}"
+            @click="genderChange(item.value)"
+          >
+            <radio 
+              class="gender-radio"
+              color="#FF9C10"
+              :value="String(item.value)"
+              :checked="item.value === user.gender"
+            />
+            <text class="gender-label">{{ item.name }}</text>
+          </view>
         </view>
       </view>
-      <view class="item">
-        <view class="title">昵称</view>
-        <input class="item_input" placeholder="请输入昵称" v-model="user.name" />
+      
+      <!-- 昵称输入 -->
+      <view class="form-section">
+        <text class="section-title">昵称</text>
+        <input 
+          class="form-input"
+          placeholder="请输入昵称"
+          placeholder-class="placeholder"
+          v-model="user.name"
+          maxlength="12"
+        />
       </view>
-      <view class="item">
-        <view class="title">手机号</view>
-        <input class="item_input" placeholder="请输入手机号" v-model="user.phone" />
+      
+      <!-- 手机号输入 -->
+      <view class="form-section">
+        <text class="section-title">手机号</text>
+        <input 
+          class="form-input"
+          placeholder="请输入手机号"
+          placeholder-class="placeholder"
+          v-model="user.phone"
+          type="number"
+          maxlength="11"
+        />
       </view>
-      <button form-type="submit" class="submit_btn">确认修改</button>
+      
+      <!-- 提交按钮 -->
+      <button form-type="submit" class="submit-btn">保存修改</button>
     </form>
   </view>
 </template>
@@ -150,82 +197,121 @@ const submit = async () => {
 </script>
 
 <style lang="less" scoped>
-.submit {
-  margin: 20rpx 30rpx;
-  .pic_box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 30rpx;
-    position: relative;
-    image {
-      width: 120rpx;
-      height: 120rpx;
-    }
-    .text {
-      font-size: 25rpx;
-      line-height: 50rpx;
-      color: #666;
-    }
-  }
-  .radio {
-    height: 110rpx;
-    font-size: 26rpx;
-    text-align: left;
-    color: #333333;
-    letter-spacing: 0px;
-    display: flex;
-    padding-right: 20rpx;
+.update-container {
+  min-height: 100vh;
+  padding: 30rpx;
+  background: linear-gradient(180deg, #FFF9E6 30%, #f8f9fa 100%);
+}
 
-    .radio-item {
+.update-form {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.03);
+}
+
+.avatar-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+  
+  .avatar-container {
+    position: relative;
+    width: 160rpx;
+    height: 160rpx;
+    margin-bottom: 20rpx;
+    
+    .avatar-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4rpx solid #FFF8E8;
+      box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.1);
+    }
+    
+
+  }
+  
+  .upload-text {
+    font-size: 26rpx;
+    color: #999;
+  }
+}
+
+.form-section {
+  margin-bottom: 40rpx;
+  padding-bottom: 30rpx;
+  border-bottom: 1rpx dashed #f0f0f0;
+  
+  .section-title {
+    display: block;
+    font-size: 30rpx;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20rpx;
+  }
+  
+  .form-input {
+    width: 100%;
+    height: 80rpx;
+    font-size: 28rpx;
+    color: #333;
+    padding: 0 10rpx;
+    border-radius: 8rpx;
+    background: #FFFCF5;
+  }
+  
+  .placeholder {
+    font-size: 26rpx;
+    color: #999;
+  }
+}
+
+.gender-section {
+  .gender-options {
+    display: flex;
+    margin-top: 20rpx;
+    
+    .gender-option {
       display: flex;
       align-items: center;
-
-      &:first-child {
-        margin-right: 54rpx;
+      margin-right: 60rpx;
+      
+      &.active {
+        .gender-label {
+          color: #FF9C10;
+        }
+      }
+      
+      .gender-radio {
+        transform: scale(0.8);
+        margin-right: 8rpx;
+      }
+      
+      .gender-label {
+        font-size: 28rpx;
+        color: #666;
       }
     }
+  }
+}
 
-    .radio-img {
-      width: 32rpx;
-      height: 32rpx;
-      margin-right: 10rpx;
-    }
-  }
-  .item {
-    height: 110rpx;
-    line-height: 110rpx;
-    border-bottom: 1px solid #efefef;
-    display: flex;
-    image {
-      width: 40rpx;
-      height: 40rpx;
-      margin-right: 20rpx;
-    }
-    .title {
-      width: 120rpx;
-      font-size: 30rpx;
-      color: #333;
-    }
-    .item_input {
-      flex: 1;
-      height: 110rpx;
-      line-height: 110rpx;
-      font-size: 30rpx;
-      color: #666;
-    }
-  }
-  .submit_btn {
-    width: 600rpx;
-    height: 80rpx;
-    line-height: 80rpx;
-    border-radius: 40rpx;
-    background: #22ccff;
-    border: none;
-    color: #fff;
-    font-size: 30rpx;
-    text-align: center;
-    margin: 40rpx auto;
+.submit-btn {
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 88rpx;
+  background: linear-gradient(to right, #FFB74D, #FF9C10);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-top: 60rpx;
+  box-shadow: 0 8rpx 20rpx rgba(255, 156, 16, 0.3);
+  transition: all 0.3s;
+  
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
   }
 }
 </style>
