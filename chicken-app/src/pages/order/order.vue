@@ -144,9 +144,6 @@
     </view>
   </view>
 
-  <view v-show="!status" class="close" @click="goBack">
-    <view class="text">本店已打烊</view>
-  </view>
 </template>
 
 <script setup lang="ts">
@@ -393,10 +390,6 @@ const submitOrder = () => {
   uni.navigateTo({
     url: '/pages/submit/submit',
   })
-}
-
-const goBack = () => {
-  uni.switchTab({url: '/pages/index/index'})
 }
 
 // 页面加载
@@ -1275,29 +1268,5 @@ onShow(async () => {
     }
   }
 }
-.close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 750rpx;
-  height: 100%;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.2);
-  text-align: center;
-  line-height: 40rpx;
-  font-size: 24rpx;
-  color: #000;
-  .text {
-    width: 750rpx;
-    height: 200rpx;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.5);
-    bottom: 0;
-    text-align: center;
-    line-height: 200rpx;
-    font-size: 40rpx;
-    font-weight: bold;
-    color: #fff;
-  }
-}
+
 </style>

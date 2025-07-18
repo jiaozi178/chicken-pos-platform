@@ -62,6 +62,7 @@
   </view>
 </template>
 
+
 <script lang="ts" setup>
 import {ref, onMounted, computed} from 'vue'
 import {getAddressListAPI, updateDefaultAddressAPI} from '@/api/address'
@@ -379,4 +380,5 @@ const getRadio = async (e: any, item: any) => {
 .customer-box {
   height: 100vh;
 }
+
 </style>

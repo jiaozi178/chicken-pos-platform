@@ -90,7 +90,6 @@ $text-color-assist: #999;
 $color-primary: #f39800;
 $box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
 
-
 .banner {
 	position: relative;
 	width: 100%;
@@ -237,5 +236,11 @@ $box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
 			}
 		}
 	}
+}
+</style>
+
+<style>
+page {
+  background: linear-gradient(180deg, #FFF9E6 30%, #f8f9fa 100%);
 }
 </style>

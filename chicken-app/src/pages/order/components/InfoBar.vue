@@ -1,6 +1,6 @@
 <template>
   <!-- 餐厅简介弹窗 -->
-  <view v-if="showInfo" class="info fade-in-out">
+  <view v-if="showInfo" class="info fade-in-out"  :style="{ top: navBarHeight + 'rpx' }">
     <view class="info1">
       <view class="status">{{ status === true ? '营业中' : '打烊中' }}</view>
       <uni-icons custom-prefix="iconfont" type="icon-qian" size="15"></uni-icons>
@@ -17,6 +17,10 @@
 import {getStatusAPI} from '@/api/shop'
 import {onLoad} from '@dcloudio/uni-app'
 import {ref} from 'vue'
+
+// 添加导航栏高度获取
+const systemInfo = uni.getSystemInfoSync()
+const navBarHeight = (systemInfo?.statusBarHeight || 0) * 2// 状态栏高度 + 导航栏高度
 
 // 控制简介显示
 const showInfo = ref(false)
@@ -52,8 +56,8 @@ const phone = () => {
 <style lang="less" scoped>
 .info {
   position: fixed;
-  z-index: 100;
-  top: 50rpx;
+  z-index: 1000;
+  top: 100rpx;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
@@ -104,18 +108,17 @@ const phone = () => {
     opacity: 0;
     transform: translateX(-50%) translateY(-20rpx);
   }
-  20% {
+  10% {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
-  80% {
+  90% {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
   100% {
     opacity: 0;
     transform: translateX(-50%) translateY(-20rpx);
-    visibility: hidden; /* 隐藏元素但不影响布局 */
   }
 }
 </style>

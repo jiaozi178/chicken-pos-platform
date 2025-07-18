@@ -13,4 +13,7 @@ onHide(() => {
 
 <style>
 @import '@/static/styles/iconfont.css';
+/* page {
+  background-color: #f7e293;
+} */
 </style>
