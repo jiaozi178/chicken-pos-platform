@@ -126,3 +126,9 @@ image {
   height: 100vh;
 }
 </style>
+
+<style>
+page {
+  background: linear-gradient(180deg, #FFF9E6 30%, #f8f9fa 100%);
+}
+</style>

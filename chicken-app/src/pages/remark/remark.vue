@@ -70,14 +70,14 @@ const returnToSubmit = () => {
     height: 72rpx;
     line-height: 72rpx;
     border-radius: 72rpx;
-    background: #ffc200;
+    background: linear-gradient(to right, #FFB74D, #FF9C10);
+    color: #fff;
     border: 1px solid #ffc200;
     opacity: 1;
     font-size: 30rpx;
     font-family: PingFangSC, PingFangSC-Medium;
     font-weight: 500;
     text-align: center;
-    color: #333333;
     letter-spacing: 0px;
     display: flex;
     align-items: center;

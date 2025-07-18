@@ -16,14 +16,14 @@
       </uni-countdown>
     </view>
     <view class="price">￥{{ orderAmount }}</view>
-    <view class="shop">寒夜餐厅 - {{ orderNumber }}</view>
+    <view class="shop">正新鸡排 - {{ orderNumber }}</view>
     <view class="wechat">
       <image class="pay" src="../../static/icon/pay.png" />
       微信支付
       <image class="choose" src="../../static/icon/choose.png" />
     </view>
     <view class="bottom">
-      <button class="comfirm_btn" type="primary" :plain="true" @click="toSuccess()">确认支付</button>
+      <button class="comfirm_btn" type="button" :plain="true" @click="toSuccess()">确认支付</button>
     </view>
   </view>
 </template>
@@ -206,7 +206,7 @@ const cancelOrder = async () => {
     height: 80rpx;
     line-height: 80rpx;
     border-radius: 40rpx;
-    background: #00aaff;
+    background: linear-gradient(to right, #FFB74D, #FF9C10);
     border: none;
     color: #fff;
     font-size: 30rpx;
@@ -217,6 +217,6 @@ const cancelOrder = async () => {
 
 <style>
 page {
-  background-color: #f8f8f8;
+  background: linear-gradient(180deg, #FFF9E6 30%, #f8f9fa 100%);
 }
 </style>
