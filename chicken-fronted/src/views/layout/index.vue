@@ -419,9 +419,13 @@ onBeforeUnmount(() => {
 .status-change {
   float: right;
   margin: 14px 20px;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: #E60012;
   border: none;
-  color: #fff;
+  color: #ffffff;
+  border-radius: 5px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(230, 0, 18, 0.08);
+  transition: background 0.2s;
 }
 
 .user {

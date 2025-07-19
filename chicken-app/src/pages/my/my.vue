@@ -44,11 +44,11 @@
         </view>
         <text class="grid_text">历史订单</text>
       </view>
-      <view class="grid_item" @click="goMyself">
+      <view class="grid_item" @click="logout">
         <view class="icon_wrap">
-          <image class="icon" src="../../static/icon/setting.png"></image>
+          <image class="icon" src="../../static/icon/exit.png"></image>
         </view>
-        <text class="grid_text">信息设置</text>
+        <text class="grid_text">退出登录</text>
       </view>
     </view>
 
@@ -103,7 +103,7 @@
 
 <script lang="ts" setup>
 import pushMsg from '../../components/message/pushMsg.vue'
-import {ref, reactive} from 'vue'
+import {ref, reactive, computed} from 'vue'
 import {onLoad, onShow} from '@dcloudio/uni-app'
 import {useUserStore} from '@/stores/modules/user'
 import {getUserInfoAPI} from '@/api/user'
@@ -147,13 +147,15 @@ const statusList = [
   },
 ]
 
-const user = reactive({
+const user = computed(() => ({
   id: userStore.profile!.id,
   name: '',
   gender: 1,
   phone: '未设置',
   pic: '',
-})
+}))
+
+
 const historyOrders = ref<OrderVO[]>([])
 const orderDTO = ref<OrderPageDTO>({
   page: 1,
@@ -164,24 +166,24 @@ const total = ref(0)
 onLoad(async (options) => {
   console.log('options', options)
   console.log('userStore', userStore.profile)
-  const res = await getUserInfo(user.id)
+  const res = await getUserInfo(user.value.id)
   // 获取所有订单信息
   await getOrderPage()
 })
 
 onShow(async () => {
   console.log('页面 onShow 触发！')
-  await getUserInfo(user.id)
+  await getUserInfo(user.value.id)
   await getOrderPage()
 })
 
 const getUserInfo = async (id: number) => {
   const res = await getUserInfoAPI(id)
   console.log('用户信息', res)
-  user.name = res.data.name as string
-  user.gender = res.data.gender ?? 1 // 之前没设置就默认男士
-  user.phone = res.data.phone as string
-  user.pic = res.data.pic as string
+  user.value.name = res.data.name as string
+  user.value.gender = res.data.gender ?? 1 // 之前没设置就默认男士
+  user.value.phone = res.data.phone as string
+  user.value.pic = res.data.pic as string
 }
 
 const getOrderPage = async () => {
@@ -232,6 +234,15 @@ const goHistory = () => {
 const goMyself = () => {
   uni.navigateTo({
     url: '/pages/updateMy/updateMy',
+  })
+}
+
+const logout = () => {
+  // 清除用户信息
+  userStore.setProfile({} as any)
+  // 跳转到主页
+  uni.switchTab({
+    url: '/pages/index/index'
   })
 }
 
