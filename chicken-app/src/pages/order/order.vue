@@ -2,6 +2,19 @@
   <Navbar title="菜单" />
   <InfoBar ref="infobarRef"/>
 
+  <view class="search-bar">
+  <view class="search-input-wrapper">
+    <image src="../../static/icon/search.png" class="search-icon" />
+    <input
+      type="text"
+      v-model="searchValue"
+      placeholder="搜索菜品／套餐"
+      class="search-input"
+      @input="onSearchInput"
+    />
+  </view>
+</view>
+
   <view class="viewport">
     <!-- 分类 -->
     <view class="categories">
@@ -21,7 +34,7 @@
       <scroll-view class="secondary" scroll-y>
         <view class="section">
           <navigator
-            v-for="dish in dishList"
+            v-for="dish in filteredDishList"
             :key="dish.id"
             class="dish"
             hover-class="none"
@@ -157,7 +170,7 @@ import type {DishItem, FlavorItem, DishToCartItem} from '@/types/dish'
 import type {SetmealItem} from '@/types/setmeal'
 import type {CartDTO, CartItem} from '@/types/cart'
 import {onLoad, onShow} from '@dcloudio/uni-app'
-import {ref, onMounted} from 'vue'
+import {ref, computed, onMounted} from 'vue'
 import Navbar from '@/components/navbar/Navbar.vue'
 import InfoBar from './components/InfoBar.vue'
 import { getImageUrl } from '@/utils/imageUrl'
@@ -191,8 +204,51 @@ const dialogDish = ref<DishToCartItem>()
 const flavors = ref<FlavorItem[]>([])
 // 已选择的口味列表
 const chosedflavors = ref<string[]>([])
+// 搜索关键字
+const searchValue = ref('')
 
 // ------ method ------
+// 计算过滤后的列表
+const onSearchInput = async (e: any) => {
+  const kw = e.detail.value.trim().toLowerCase();
+  if (!kw) {
+    // 搜索框为空时，恢复当前分类全部列表
+    let res;
+    if (categoryList.value[activeIndex.value].type === 1) {
+      res = await getDishListAPI(categoryList.value[activeIndex.value].id);
+    } else {
+      res = await getSetmealListAPI(categoryList.value[activeIndex.value].id);
+    }
+    dishList.value = res.data;
+    return;
+  }
+  // 全局搜索所有分类
+  for (let i = 0; i < categoryList.value.length; i++) {
+    let res;
+    if (categoryList.value[i].type === 1) {
+      res = await getDishListAPI(categoryList.value[i].id);
+    } else {
+      res = await getSetmealListAPI(categoryList.value[i].id);
+    }
+    const list = res.data.filter((item: any) => {
+      const name = item.name.toLowerCase();
+      const detail = ('detail' in item && item.detail) ? item.detail.toLowerCase() : '';
+      return name.includes(kw) || detail.includes(kw);
+    });
+    if (list.length > 0) {
+      activeIndex.value = i;
+      dishList.value = list;
+      return;
+    }
+  }
+  // 没有匹配项则清空
+  dishList.value = [];
+};
+
+const filteredDishList = computed(() => {
+  return dishList.value;
+})
+
 const getCategoryData = async () => {
   const res = await getCategoryAPI()
   console.log(res)
@@ -398,6 +454,37 @@ onShow(async () => {
 </script>
 
 <style lang="less" scoped>
+.search-bar {
+  padding: 20rpx 30rpx 10rpx;
+  background-color: #fff;
+
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #f3f4f4;
+    border-radius: 32rpx;
+    box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.06);
+    padding: 0 20rpx;
+    height: 64rpx;
+  }
+
+  .search-icon {
+    width: 32rpx;
+    height: 32rpx;
+    margin-right: 16rpx;
+    opacity: 0.7;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 28rpx;
+    color: #222;
+    outline: none;
+  }
+}
+
 .dialog {
   position: fixed;
   width: 100%;
