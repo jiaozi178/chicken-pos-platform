@@ -52,3 +52,14 @@ INSERT IGNORE INTO `setmeal_dish` VALUES (19, '甘梅地瓜条', 10.00, 1, 27, 3
 INSERT IGNORE INTO `setmeal_dish` VALUES (20, '黑椒鸡块', 8.00, 1, 26, 3);
 INSERT IGNORE INTO `setmeal_dish` VALUES (21, '冰红茶气泡水', 4.00, 1, 28, 3);
 INSERT IGNORE INTO `setmeal_dish` VALUES (22, '中国功夫腿', 5.00, 1, 29, 3);
+
+-- 客户相关模拟数据
+INSERT IGNORE INTO `user` VALUES (1, 'user', '996', '17895632986', 0, 'ffffff', '/upload/avatars/006629c8-3654-49c0-8dd1-a0664cb8c698.jpeg', '2025-01-01 00:00:00');
+INSERT IGNORE INTO `user` VALUES (2, '朱安娜', 'HUIGHUYGK4', '15869365896', 0, 'fjljsoieDXd86ef', NULL, '2025-07-24 12:12:29');
+INSERT IGNORE INTO `user` VALUES (3, '王晓红', 'JHOIJY65ffel', '15698347830', 0, 'jijef6LOH5', NULL, '2025-07-17 12:13:17');
+INSERT IGNORE INTO `user` VALUES (4, '龙致远', 'uPRw7KiF3k', '17962889365', 1, '4gVTtxaoUP', '/upload/avatars/58dca756-6f34-46b1-baec-8bfdc105fe51.png', '2012-02-12 01:51:04');
+INSERT IGNORE INTO `user` VALUES (5, '张金龙', 'UHHffegg5896FEd', '19635862058', 1, 'fefeafef58NJ', NULL, '2025-07-16 12:14:27');
+INSERT IGNORE INTO `user` VALUES (6, 'Kwok Wing Fat', 'rb4fgCSayn', '17389625987', 1, 'qwQxYrH5kZ', '/upload/avatars/e9f69fcb-f176-417c-8b37-d49fedf1ce00.png', '2021-01-16 04:26:31');
+INSERT IGNORE INTO `user` VALUES (7, 'Au Wai Yee', '1has9qBFgo', '17896325896', 1, 'nopHqxHnth', '/upload/avatars/f73d4915-33a5-4b7f-b40f-36e0ff91e227.png', '2024-08-08 08:11:28');
+INSERT IGNORE INTO `user` VALUES (8, '谭宇宁', '9tEZhvozcM', '15369685249', 1, 'OSbz9izdbn', '/upload/avatars/8d433e40-da2a-4650-bd39-80f49b6b401e.png', '2003-08-16 19:42:56');
+INSERT IGNORE INTO `user` VALUES (9, 'Lam Chung Yin', 'UNyMCKr5sG', '15698632896', 1, 'hfg8JXzoDZ', '/upload/avatars/413eb532-5766-481c-a116-a690bcb91c43.png', '2021-07-28 11:24:50');
