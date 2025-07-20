@@ -37,4 +37,5 @@ dump.rdb
 
 ### from Chase ###
 ### server/src/main/resources/application-dev.yml
+upload/
 
