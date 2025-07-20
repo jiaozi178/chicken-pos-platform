@@ -18,6 +18,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import fun.cyhgraph.utils.AvatarFileUtil;
+
+import java.io.File;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -27,6 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 员工登录
+     *
      * @param employeeLoginDTO
      * @return
      */
@@ -35,13 +39,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         String password = employeeLoginDTO.getPassword();
         // 先查数据库，看是否存在该账号
         Employee employee = employeeMapper.getByAccount(account);
-        if (employee == null){
+        if (employee == null) {
             throw new EmployeeNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
         // 再将前端传过来的密码进行MD5加密
         password = DigestUtils.md5DigestAsHex(password.getBytes());
         // 和之前存进数据库的加密的密码进行比对，看看是否一样，不一样要抛异常
-        if (!password.equals(employee.getPassword())){
+        if (!password.equals(employee.getPassword())) {
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
         return employee;
@@ -72,6 +76,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 根据id获取员工信息
+     *
      * @return
      */
     public Employee getEmployeeById(Integer id) {
@@ -81,6 +86,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 员工分页查询
+     *
      * @return
      */
     public PageResult employeePageList(PageDTO pageDTO) {
@@ -92,12 +98,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 修改员工
+     *
      * @param employeeDTO
      */
     public void update(EmployeeDTO employeeDTO) {
         // 缺少时间等字段，需要手动加入，否则Mapper里的autofill注解会为EmployeeDTO去setUpdateTime，然而根本没这个方法导致报错！
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
+        employeeMapper.update(employee);
+
+
+        // 处理Base64头像图片
+        String base64Avatar = employee.getPic();
+        if (base64Avatar != null && base64Avatar.startsWith("data:image/")) {
+            deleteOldAvatar(employeeDTO.getId());
+            String avatarUrl = AvatarFileUtil.saveBase64Avatar(base64Avatar);
+            employee.setPic(avatarUrl); // 存储相对路径URL
+        }
+
         employeeMapper.update(employee);
     }
 
@@ -110,6 +128,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 根据id修改员工状态
+     *
      * @param id
      */
     public void onOff(Integer id) {
@@ -118,6 +137,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 管理员新增员工
+     *
      * @param employeeDTO
      */
     public void addEmployee(EmployeeDTO employeeDTO) {
@@ -135,6 +155,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 修改密码
+     *
      * @param employeeFixPwdDTO
      */
     public void fixPwd(EmployeeFixPwdDTO employeeFixPwdDTO) {
@@ -145,7 +166,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Integer id = BaseContext.getCurrentId();
         Employee employee = employeeMapper.getById(id);
         // 和之前存进数据库的加密的密码进行比对，看看是否一样，不一样要抛异常
-        if (!oldPwd.equals(employee.getPassword())){
+        if (!oldPwd.equals(employee.getPassword())) {
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
         // 旧密码正确，将新密码加密后进行更新
@@ -153,5 +174,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         String password = DigestUtils.md5DigestAsHex(newPwd.getBytes());
         employee.setPassword(password);
         employeeMapper.updatePwd(employee);
+    }
+
+    /**
+     * 删除旧头像文件
+     */
+    private void deleteOldAvatar(Integer employeeId) {
+        try {
+            Employee oldUser = employeeMapper.getById(employeeId);
+            if (oldUser != null && oldUser.getPic() != null && oldUser.getPic().startsWith("/upload/avatars/")) {
+                String oldFilePath = "upload" + oldUser.getPic().replace("/upload/", "/");
+                File oldFile = new File(oldFilePath);
+                if (oldFile.exists()) {
+                    oldFile.delete();
+                }
+            }
+        } catch (Exception e) {
+            // 删除失败不影响主流程
+            System.err.println("删除旧头像失败：" + e.getMessage());
+        }
     }
 }

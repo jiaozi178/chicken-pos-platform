@@ -27,9 +27,11 @@ export default defineConfig({
         // /api去掉，变成空串，因为它只是一个标识而已，并不是路径
         rewrite: (path) => path.replace(/^\/api/, '')
       },
+      //拦截所有以 /upload 开头的请求,将匹配的请求转发到后端服务的 8081 端口。
       '/upload': {
         target: 'http://localhost:8081', // 后端服务地址
         changeOrigin: true,
+        //下面这句可能并不需要, 主要是为了安全
         rewrite: (path) => path.replace(/^\/upload/, '/upload')
       }
     }

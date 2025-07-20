@@ -2,13 +2,18 @@ package fun.cyhgraph.service.serviceImpl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import fun.cyhgraph.constant.MessageConstant;
+import fun.cyhgraph.dto.PageDTO;
 import fun.cyhgraph.dto.UserDTO;
 import fun.cyhgraph.dto.UserLoginDTO;
+import fun.cyhgraph.entity.Employee;
 import fun.cyhgraph.entity.User;
 import fun.cyhgraph.exception.LoginFailedException;
 import fun.cyhgraph.mapper.UserMapper;
 import fun.cyhgraph.properties.WeChatProperties;
+import fun.cyhgraph.result.PageResult;
 import fun.cyhgraph.service.UserService;
 import fun.cyhgraph.utils.HttpClientUtil;
 import org.springframework.beans.BeanUtils;
@@ -62,6 +67,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据id查询用户
+     *
      * @param id
      * @return
      */
@@ -71,6 +77,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 修改用户信息
+     *
      * @param userDTO
      */
     public void update(UserDTO userDTO) {
@@ -137,6 +144,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 调用微信接口服务，获取微信用户的openid
      * 4参数： appid secret(在小程序平台查看，忘了就重置) 临时登录凭证code 常量authorization_code
+     *
      * @param code
      * @return
      */
@@ -153,5 +161,26 @@ public class UserServiceImpl implements UserService {
         JSONObject jsonObject = JSON.parseObject(json);
         String openid = jsonObject.getString("openid");
         return openid;
+    }
+
+    /**
+     * 进行用户信息的分页(模糊)查询
+     *
+     * @param pageDTO
+     * @return
+     */
+    public PageResult userPageList(PageDTO pageDTO) {
+        // 传分页参数给PageHelper自动处理，会自动加上limit和count(*)返回分页结果和总记录数
+        PageHelper.startPage(pageDTO.getPage(), pageDTO.getPageSize());
+        Page<User> pagelist = userMapper.pageQuery(pageDTO);
+        return new PageResult(pagelist.getTotal(), pagelist.getResult());
+    }
+
+    /**
+     * 删除特定用户信息
+     * @param id
+     */
+    public void delete(Integer id) {
+        userMapper.delete(id);
     }
 }
